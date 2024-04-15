@@ -2,11 +2,9 @@ import {
   HomeIcon,
   UserCircleIcon,
   TableCellsIcon,
-  InformationCircleIcon,
   ServerStackIcon,
-  RectangleStackIcon,
 } from "@heroicons/react/24/solid";
-import { Home, Profile, Tables, Notifications } from "@/pages/dashboard";
+import { Home, Profile, Courses, Curriculums } from "@/pages/dashboard";
 import { SignIn, SignUp } from "@/pages/auth";
 
 const icon = {
@@ -19,21 +17,39 @@ export const routes = [
     pages: [
       {
         icon: <HomeIcon {...icon} />,
-        name: "dashboard",
+        name: "Dashboard",
         path: "/home",
         element: <Home />,
       },
       {
         icon: <UserCircleIcon {...icon} />,
-        name: "profile",
+        name: "Profile",
         path: "/profile",
         element: <Profile />,
       },
       {
         icon: <TableCellsIcon {...icon} />,
-        name: "tables",
-        path: "/tables",
-        element: <Tables />,
+        name: "Curriculums",
+        path: "/curriculums",
+        element: <Curriculums />,
+      },
+      {
+        icon: <TableCellsIcon {...icon} />,
+        name: "Courses",
+        path: "/Courses",
+        element: <Courses />,
+      },
+    ],
+  },
+  {
+    title: "curriculums CRUD pages",
+    layout: "curriculums",
+    pages: [
+      {
+        icon: <ServerStackIcon {...icon} />,
+        name: "deleteCurriculums",
+        path: "/delete",
+        element: <SignIn />,
       },
     ],
   },
@@ -47,12 +63,6 @@ export const routes = [
         path: "/sign-in",
         element: <SignIn />,
       },
-      // {
-      //   icon: <RectangleStackIcon {...icon} />,
-      //   name: "sign up",
-      //   path: "/sign-up",
-      //   element: <SignUp />,
-      // },
     ],
   },
 ];
