@@ -9,7 +9,7 @@ import {
   Progress,
 } from "@material-tailwind/react";
 import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
-import { authorsTableData, projectsTableData } from "@/data";
+import { courseData } from "@/data";
 
 export function Courses() {
   return (
@@ -24,7 +24,7 @@ export function Courses() {
           <table className="w-full min-w-[640px] table-auto">
             <thead>
               <tr>
-                {["Tên môn học", "Giáo viên", "Tình trạng", "Năm", ""].map((el) => (
+                {["Tên môn học", "Giảng viên", "Công bố", "Năm", ""].map((el) => (
                   <th
                     key={el}
                     className="border-b border-blue-gray-50 py-3 px-5 text-left"
@@ -40,10 +40,10 @@ export function Courses() {
               </tr>
             </thead>
             <tbody>
-              {authorsTableData.map(
-                ({ name, email, job, online, date }, key) => {
+              {courseData.map(
+                ({ name, email, teacher, status, date }, key) => {
                   const className = `py-3 px-5 ${
-                    key === authorsTableData.length - 1
+                    key === courseData.length - 1
                       ? ""
                       : "border-b border-blue-gray-50"
                   }`;
@@ -60,26 +60,22 @@ export function Courses() {
                             >
                               {name}
                             </Typography>
-                            <Typography className="text-xs font-normal text-blue-gray-500">
-                              {email}
-                            </Typography>
                           </div>
                         </div>
                       </td>
                       <td className={className}>
                         <Typography className="text-xs font-semibold text-blue-gray-600">
-                          {job[0]}
+                          {teacher}
                         </Typography>
                         <Typography className="text-xs font-normal text-blue-gray-500">
-                          {job[1]}
+                          {email}
                         </Typography>
                       </td>
                       <td className={className}>
                         <Chip
                           variant="gradient"
-                          color={online ? "green" : "blue-gray"}
-                          value={online ? "online" : "offline"}
-                          className="py-0.5 px-2 text-[11px] font-medium w-fit"
+                          value={status ? "Đã công bố" : "Chưa công bố"}
+                          className="py-1 px-2 text-[11px] font-medium w-fit"
                         />
                       </td>
                       <td className={className}>
@@ -87,13 +83,20 @@ export function Courses() {
                           {date}
                         </Typography>
                       </td>
-                      <td className={className}>
+                      <td className={`flex flex-col gap-2 ${className}`}>
                         <Typography
                           as="a"
-                          href="#"
-                          className="text-xs font-semibold text-blue-gray-600"
+                          href={`curriculums/edit/3`}
+                          className="text-xs font-semibold text-blue-gray-600 bg-green-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
                         >
-                          Edit
+                          Chỉnh sửa
+                        </Typography>
+                        <Typography
+                          as="a"
+                          href={`curriculums/delete/3`}
+                          className="text-xs font-semibold text-blue-gray-600 bg-red-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
+                        >
+                          Xóa
                         </Typography>
                       </td>
                     </tr>

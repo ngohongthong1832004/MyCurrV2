@@ -12,20 +12,24 @@ import {
   Avatar,
   Tooltip,
   Progress,
+  Chip,
 } from "@material-tailwind/react";
+
 import {
   EllipsisVerticalIcon,
   ArrowUpIcon,
 } from "@heroicons/react/24/outline";
 import { StatisticsCard } from "@/widgets/cards";
-import { StatisticsChart } from "@/widgets/charts";
+
 import {
   statisticsCardsData,
-  statisticsChartsData,
   projectsTableData,
-  ordersOverviewData,
+  courseData,
+  authorsTableData,
+  curriculumData,
 } from "@/data";
-import { CheckCircleIcon, ClockIcon } from "@heroicons/react/24/solid";
+import { CheckCircleIcon} from "@heroicons/react/24/solid";
+
 
 export function Home() {
   return (
@@ -48,23 +52,7 @@ export function Home() {
           />
         ))}
       </div>
-      <div className="mb-6 grid grid-cols-1 gap-y-12 gap-x-6 md:grid-cols-2 xl:grid-cols-3">
-        {statisticsChartsData.map((props) => (
-          <StatisticsChart
-            key={props.title}
-            {...props}
-            footer={
-              <Typography
-                variant="small"
-                className="flex items-center font-normal text-blue-gray-600"
-              >
-                <ClockIcon strokeWidth={2} className="h-4 w-4 text-blue-gray-400" />
-                &nbsp;{props.footer}
-              </Typography>
-            }
-          />
-        ))}
-      </div>
+
       <div className="mb-4 grid grid-cols-1 gap-6 xl:grid-cols-3">
         <Card className="overflow-hidden xl:col-span-2 border border-blue-gray-100 shadow-sm">
           <CardHeader
@@ -75,14 +63,7 @@ export function Home() {
           >
             <div>
               <Typography variant="h6" color="blue-gray" className="mb-1">
-                Projects
-              </Typography>
-              <Typography
-                variant="small"
-                className="flex items-center gap-1 font-normal text-blue-gray-600"
-              >
-                <CheckCircleIcon strokeWidth={3} className="h-4 w-4 text-blue-gray-200" />
-                <strong>30 done</strong> this month
+                Đề cương môn học
               </Typography>
             </div>
             <Menu placement="left-start">
@@ -96,17 +77,120 @@ export function Home() {
                 </IconButton>
               </MenuHandler>
               <MenuList>
-                <MenuItem>Action</MenuItem>
-                <MenuItem>Another Action</MenuItem>
-                <MenuItem>Something else here</MenuItem>
+                <MenuItem>Thêm</MenuItem>
               </MenuList>
             </Menu>
+
           </CardHeader>
           <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
-            <table className="w-full min-w-[640px] table-auto">
+          <table className="w-full min-w-[640px] table-auto">
+            <thead>
+              <tr>
+                {["Tên môn học", "Giảng viên", "Công bố", "Năm", ""].map((el) => (
+                  <th
+                    key={el}
+                    className="border-b border-blue-gray-50 py-3 px-5 text-left"
+                  >
+                    <Typography
+                      variant="small"
+                      className="text-[11px] font-bold uppercase text-blue-gray-400"
+                    >
+                      {el}
+                    </Typography>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {courseData.slice(0,5).map(
+                ({ name, email, teacher, status, date }, key) => {
+                  const className = `py-3 px-5 ${
+                    key === courseData.length - 1
+                      ? ""
+                      : "border-b border-blue-gray-50"
+                  }`;
+
+                  return (
+                    <tr key={name}>
+                      <td className={className}>
+                        <div className="flex items-center gap-4">
+                          <div>
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-semibold"
+                            >
+                              {name}
+                            </Typography>
+                          </div>
+                        </div>
+                      </td>
+                      <td className={className}>
+                        <Typography className="text-xs font-semibold text-blue-gray-600">
+                          {teacher}
+                        </Typography>
+                        <Typography className="text-xs font-normal text-blue-gray-500">
+                          {email}
+                        </Typography>
+                      </td>
+                      <td className={className}>
+                        <Chip
+                          variant="gradient"
+                          value={status ? "Đã công bố" : "Chưa công bố"}
+                          className="py-1 px-2 text-[11px] font-medium w-fit"
+                        />
+                      </td>
+                      <td className={className}>
+                        <Typography className="text-xs font-semibold text-blue-gray-600">
+                          {date}
+                        </Typography>
+                      </td>
+                      <td className={`flex flex-col gap-2 ${className}`}>
+                        <Typography
+                          as="a"
+                          href={`curriculums/edit/3`}
+                          className="text-xs font-semibold text-blue-gray-600 bg-green-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
+                        >
+                          Chỉnh sửa
+                        </Typography>
+                        <Typography
+                          as="a"
+                          href={`curriculums/delete/3`}
+                          className="text-xs font-semibold text-blue-gray-600 bg-red-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
+                        >
+                          Xóa
+                        </Typography>
+                      </td>
+                    </tr>
+                  );
+                }
+              )}
+            </tbody>
+          </table>
+        </CardBody>
+        </Card>
+
+        <Card className="border border-blue-gray-100 shadow-sm">
+          <CardHeader
+            floated={false}
+            shadow={false}
+            color="transparent"
+            className="m-0 p-6"
+          >
+            <Typography variant="h6" color="blue-gray" className="mb-2">
+              Giảng viên
+            </Typography>
+            <Typography
+              variant="small"
+              className="flex items-center gap-1 font-normal text-blue-gray-600"
+            >
+            </Typography>
+          </CardHeader>
+          <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
+            <table className="w-full table-auto">
               <thead>
                 <tr>
-                  {["companies", "members", "budget", "completion"].map(
+                  {["Tên Giảng viên", "Khoa"].map(
                     (el) => (
                       <th
                         key={el}
@@ -124,8 +208,8 @@ export function Home() {
                 </tr>
               </thead>
               <tbody>
-                {projectsTableData.map(
-                  ({ img, name, members, budget, completion }, key) => {
+                {authorsTableData.map(
+                  ({ name, education, department}, key) => {
                     const className = `py-3 px-5 ${
                       key === projectsTableData.length - 1
                         ? ""
@@ -136,54 +220,22 @@ export function Home() {
                       <tr key={name}>
                         <td className={className}>
                           <div className="flex items-center gap-4">
-                            <Avatar src={img} alt={name} size="sm" />
-                            <Typography
+                            <Typography className="text-xs font-semibold text-blue-gray-600">
+                              {name}
+                            </Typography>
+                            <Typography className="text-xs font-normal text-blue-gray-500">
+                              {education}
+                            </Typography>
+                          </div>
+                        </td>
+                        <td className={className}>
+                          <Typography
                               variant="small"
                               color="blue-gray"
                               className="font-bold"
                             >
-                              {name}
+                              {department}
                             </Typography>
-                          </div>
-                        </td>
-                        <td className={className}>
-                          {members.map(({ img, name }, key) => (
-                            <Tooltip key={name} content={name}>
-                              <Avatar
-                                src={img}
-                                alt={name}
-                                size="xs"
-                                variant="circular"
-                                className={`cursor-pointer border-2 border-white ${
-                                  key === 0 ? "" : "-ml-2.5"
-                                }`}
-                              />
-                            </Tooltip>
-                          ))}
-                        </td>
-                        <td className={className}>
-                          <Typography
-                            variant="small"
-                            className="text-xs font-medium text-blue-gray-600"
-                          >
-                            {budget}
-                          </Typography>
-                        </td>
-                        <td className={className}>
-                          <div className="w-10/12">
-                            <Typography
-                              variant="small"
-                              className="mb-1 block text-xs font-medium text-blue-gray-600"
-                            >
-                              {completion}%
-                            </Typography>
-                            <Progress
-                              value={completion}
-                              variant="gradient"
-                              color={completion === 100 ? "green" : "blue"}
-                              className="h-1"
-                            />
-                          </div>
                         </td>
                       </tr>
                     );
@@ -193,62 +245,130 @@ export function Home() {
             </table>
           </CardBody>
         </Card>
-        <Card className="border border-blue-gray-100 shadow-sm">
-          <CardHeader
+      </div>
+
+      <div className="mb-12 grid">
+         <Card className="overflow-hidden xl:col-span-2 border border-blue-gray-100 shadow-sm">
+
+
+          <CardHeader 
             floated={false}
             shadow={false}
             color="transparent"
-            className="m-0 p-6"
-          >
+            className="m-0 p-6 flex items-center justify-between">
             <Typography variant="h6" color="blue-gray" className="mb-2">
-              Orders Overview
+              Giáo trình / Chương trình khung
             </Typography>
-            <Typography
-              variant="small"
-              className="flex items-center gap-1 font-normal text-blue-gray-600"
-            >
-              <ArrowUpIcon
-                strokeWidth={3}
-                className="h-3.5 w-3.5 text-green-500"
-              />
-              <strong>24%</strong> this month
-            </Typography>
+            <Menu placement="left-start">
+              <MenuHandler>
+                <IconButton size="sm" variant="text" color="blue-gray">
+                  <EllipsisVerticalIcon
+                    strokeWidth={3}
+                    fill="currenColor"
+                    className="h-6 w-6"
+                  />
+                </IconButton>
+              </MenuHandler>
+              <MenuList>
+                <MenuItem>Thêm</MenuItem>
+              </MenuList>
+            </Menu>
           </CardHeader>
-          <CardBody className="pt-0">
-            {ordersOverviewData.map(
-              ({ icon, color, title, description }, key) => (
-                <div key={title} className="flex items-start gap-4 py-3">
-                  <div
-                    className={`relative p-1 after:absolute after:-bottom-6 after:left-2/4 after:w-0.5 after:-translate-x-2/4 after:bg-blue-gray-50 after:content-[''] ${
-                      key === ordersOverviewData.length - 1
-                        ? "after:h-0"
-                        : "after:h-4/6"
-                    }`}
-                  >
-                    {React.createElement(icon, {
-                      className: `!w-5 !h-5 ${color}`,
-                    })}
-                  </div>
-                  <div>
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="block font-medium"
+          <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
+            <table className="w-full min-w-[640px] table-auto">
+              <thead>
+                <tr>
+                  {["Tên chương trình", "Khóa", "Công bố", "Năm", ""].map((el) => (
+                    <th
+                      key={el}
+                      className="border-b border-blue-gray-50 py-3 px-5 text-left"
                     >
-                      {title}
-                    </Typography>
-                    <Typography
-                      as="span"
-                      variant="small"
-                      className="text-xs font-medium text-blue-gray-500"
-                    >
-                      {description}
-                    </Typography>
-                  </div>
-                </div>
-              )
-            )}
+                      <Typography
+                        variant="small"
+                        className="text-[11px] font-bold uppercase text-blue-gray-400"
+                      >
+                        {el}
+                      </Typography>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {curriculumData.slice(0,5).map(
+                  ({ coursesName, coursesId, grade, status, date }, key) => {
+                    const className = `py-3 px-5 ${
+                      key === curriculumData.length - 1
+                        ? ""
+                        : "border-b border-blue-gray-50"
+                    }`;
+
+                    return (
+                      <tr key={name}>
+                        <td className={className}>
+                          <div className="flex items-center gap-4">
+                            <div>
+                              <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-semibold"
+                              >
+                                {coursesName}
+                              </Typography>
+                              <Typography className="text-xs font-normal text-blue-gray-500">
+                                {coursesId}
+                              </Typography>
+                            </div>
+                          </div>
+                        </td>
+                        <td className={className}>
+                          <div className="flex items-center gap-4">
+                            <div>
+                              <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-semibold"
+                              >
+                                {grade}
+                              </Typography>
+                            </div>
+                          </div>
+                        </td>
+                        <td className={className}>
+                          <Chip
+                            variant="gradient"
+                            value={status ? "Đã công bố" : "Chưa công bố"}
+                            className="py-1 px-2 text-[11px] font-medium w-fit"
+                          />
+                        </td>
+                        <td className={className}>
+                          <Typography className="text-xs font-semibold text-blue-gray-600">
+                            {date}
+                          </Typography>
+                        </td>
+                        <td className={`flex flex-col gap-2 ${className}`}>
+                          <Typography
+                            as="a"
+                            href={`curriculums/edit/3`}
+                            className="text-xs font-semibold text-blue-gray-600 bg-green-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
+                          >
+                            Chỉnh sửa
+                          </Typography>
+                          <Typography
+                            as="a"
+                            href={`curriculums/delete/3`}
+                            className="text-xs font-semibold text-blue-gray-600 bg-red-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
+                          >
+                            Xóa
+                          </Typography>
+                        </td>
+                      </tr>
+                    );
+                  }
+                )}
+              </tbody>
+            </table>
           </CardBody>
+
         </Card>
       </div>
     </div>

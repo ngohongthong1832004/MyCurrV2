@@ -3,51 +3,42 @@ import {
   UserPlusIcon,
   UsersIcon,
   ChartBarIcon,
+  DocumentDuplicateIcon,
+  DocumentTextIcon,
 } from "@heroicons/react/24/solid";
 
 export const statisticsCardsData = [
   {
     color: "gray",
-    icon: BanknotesIcon,
-    title: "Today's Money",
-    value: "$53k",
+    icon: UsersIcon,
+    title: "Giảng viên",
+    value: "213",
     footer: {
       color: "text-green-500",
-      value: "+55%",
-      label: "than last week",
+      value: "+1",
+      label: "Bắp Hồng Pine (CNTT) (2021-2022)",
     },
   },
   {
     color: "gray",
-    icon: UsersIcon,
-    title: "Today's Users",
-    value: "2,300",
+    icon: DocumentTextIcon,
+    title: "Môn học",
+    value: "1129",
     footer: {
       color: "text-green-500",
-      value: "+3%",
+      value: "+9",
       label: "than last month",
     },
   },
   {
     color: "gray",
-    icon: UserPlusIcon,
-    title: "New Clients",
-    value: "3,462",
+    icon: DocumentDuplicateIcon,
+    title: "Đề cương",
+    value: "18",
     footer: {
       color: "text-red-500",
-      value: "-2%",
-      label: "than yesterday",
-    },
-  },
-  {
-    color: "gray",
-    icon: ChartBarIcon,
-    title: "Sales",
-    value: "$103,430",
-    footer: {
-      color: "text-green-500",
-      value: "+5%",
-      label: "than yesterday",
+      value: "-1",
+      label: "last year",
     },
   },
 ];

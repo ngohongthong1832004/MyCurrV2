@@ -2,9 +2,12 @@ import {
   HomeIcon,
   UserCircleIcon,
   TableCellsIcon,
-  ServerStackIcon,
+  DocumentTextIcon,
+  UsersIcon,
+  DocumentDuplicateIcon,
+  DocumentIcon,
 } from "@heroicons/react/24/solid";
-import { Home, Profile, Courses, Curriculums } from "@/pages/dashboard";
+import { Home, Profile, Courses, Curriculums, Teacher } from "@/pages/dashboard";
 import { SignIn, SignUp } from "@/pages/auth";
 
 const icon = {
@@ -28,28 +31,22 @@ export const routes = [
         element: <Profile />,
       },
       {
-        icon: <TableCellsIcon {...icon} />,
+        icon: <UsersIcon {...icon} />,
+        name: "Teacher",
+        path: "/teacher",
+        element: <Teacher />,
+      },
+      {
+        icon: <DocumentDuplicateIcon {...icon} />,
         name: "Curriculums",
         path: "/curriculums",
         element: <Curriculums />,
       },
       {
-        icon: <TableCellsIcon {...icon} />,
+        icon: <DocumentTextIcon {...icon} />,
         name: "Courses",
         path: "/Courses",
         element: <Courses />,
-      },
-    ],
-  },
-  {
-    title: "curriculums CRUD pages",
-    layout: "curriculums",
-    pages: [
-      {
-        icon: <ServerStackIcon {...icon} />,
-        name: "deleteCurriculums",
-        path: "/delete",
-        element: <SignIn />,
       },
     ],
   },
@@ -58,7 +55,7 @@ export const routes = [
     layout: "auth",
     pages: [
       {
-        icon: <ServerStackIcon {...icon} />,
+        icon: <UserCircleIcon {...icon} />,
         name: "sign in",
         path: "/sign-in",
         element: <SignIn />,
