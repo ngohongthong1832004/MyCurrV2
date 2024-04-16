@@ -29,7 +29,7 @@ import {
   authorsTableData,
   curriculumData,
 } from "@/data";
-import { CheckCircleIcon} from "@heroicons/react/24/solid";
+import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import { PATH_EDIT_COURSE, PATH_EDIT_CURRICULUM } from "@/path";
 import { Link } from "react-router-dom";
 
@@ -91,13 +91,12 @@ export function Home() {
                 </tr>
               </thead>
               <tbody>
-                {courseData.slice(0,5).map(
+                {courseData.slice(0, 5).map(
                   ({ name, email, teacher, status, date }, key) => {
-                    const className = `py-3 px-5 ${
-                      key === courseData.length - 1
-                        ? ""
-                        : "border-b border-blue-gray-50"
-                    }`;
+                    const className = `py-3 px-5 ${key === courseData.length - 1
+                      ? ""
+                      : "border-b border-blue-gray-50"
+                      }`;
 
                     return (
                       <tr key={name}>
@@ -146,32 +145,29 @@ export function Home() {
                               </IconButton>
                             </MenuHandler>
                             <MenuList>
-                            <MenuItem>
-                                <Typography
-                                  as="a"
-                                  href={"/dashboard" + PATH_EDIT_COURSE}
+                              <MenuItem>
+                                <Link
+                                  to={"/dashboard" + PATH_EDIT_COURSE}
                                   className="text-xs font-semibold text-blue-gray-600 bg-green-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
                                 >
                                   Xuất file word
-                                </Typography>
+                                </Link>
                               </MenuItem>
                               <MenuItem>
-                                <Typography
-                                  as="a"
-                                  href={"/dashboard" + PATH_EDIT_COURSE}
+                                <Link
+                                  to={"/dashboard" + PATH_EDIT_COURSE}
                                   className="text-xs font-semibold text-blue-gray-600 bg-green-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
                                 >
                                   Chỉnh sửa
-                                </Typography>
+                                </Link>
                               </MenuItem>
                               <MenuItem>
-                                <Typography
-                                  as="a"
-                                  href={'#'}
+                                <Link
+                                  to={'#'}
                                   className="text-xs font-semibold text-blue-gray-600 bg-red-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
                                 >
                                   Xóa
-                                </Typography>
+                                </Link>
                               </MenuItem>
                             </MenuList>
                           </Menu>
@@ -224,12 +220,11 @@ export function Home() {
               </thead>
               <tbody>
                 {authorsTableData.map(
-                  ({ name, education, department}, key) => {
-                    const className = `py-3 px-5 ${
-                      key === projectsTableData.length - 1
-                        ? ""
-                        : "border-b border-blue-gray-50"
-                    }`;
+                  ({ name, education, department }, key) => {
+                    const className = `py-3 px-5 ${key === projectsTableData.length - 1
+                      ? ""
+                      : "border-b border-blue-gray-50"
+                      }`;
 
                     return (
                       <tr key={name}>
@@ -245,12 +240,12 @@ export function Home() {
                         </td>
                         <td className={className}>
                           <Typography
-                              variant="small"
-                              color="blue-gray"
-                              className="font-bold"
-                            >
-                              {department}
-                            </Typography>
+                            variant="small"
+                            color="blue-gray"
+                            className="font-bold"
+                          >
+                            {department}
+                          </Typography>
                         </td>
                       </tr>
                     );
@@ -263,8 +258,8 @@ export function Home() {
       </div>
 
       <div className="mb-12 grid">
-         <Card className="overflow-hidden xl:col-span-2 border border-blue-gray-100 shadow-sm">
-          <CardHeader 
+        <Card className="overflow-hidden xl:col-span-2 border border-blue-gray-100 shadow-sm">
+          <CardHeader
             floated={false}
             shadow={false}
             color="transparent"
@@ -293,13 +288,12 @@ export function Home() {
                 </tr>
               </thead>
               <tbody>
-                {curriculumData.slice(0,5).map(
+                {curriculumData.slice(0, 5).map(
                   ({ coursesName, coursesId, grade, status, date }, key) => {
-                    const className = `py-3 px-5 ${
-                      key === curriculumData.length - 1
-                        ? ""
-                        : "border-b border-blue-gray-50"
-                    }`;
+                    const className = `py-3 px-5 ${key === curriculumData.length - 1
+                      ? ""
+                      : "border-b border-blue-gray-50"
+                      }`;
 
                     return (
                       <tr key={name}>
@@ -345,50 +339,43 @@ export function Home() {
                           </Typography>
                         </td>
                         <td className={`flex flex-col gap-2 ${className}`}>
-                        <Menu placement="left-start">
-                          <MenuHandler>
-                            <IconButton size="sm" variant="text" color="blue-gray">
-                              <EllipsisVerticalIcon
-                                strokeWidth={3}
-                                fill="currenColor"
-                                className="h-6 w-6"
-                              />
-                            </IconButton>
-                          </MenuHandler>
-                          <MenuList>
-                          <MenuItem>
-                              <Typography
-                                as="a"
-                                href={"/dashboard" + PATH_EDIT_CURRICULUM}
-                                className="text-xs font-semibold text-blue-gray-600 bg-green-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
-                              >
-                                Xuất file word
-                              </Typography>
-                            </MenuItem>
-                            <MenuItem>
-                              <Typography
-                                as="a"
-                                href={"/dashboard" + PATH_EDIT_CURRICULUM + "?id=1"}
-                                className="text-xs font-semibold text-blue-gray-600 bg-green-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
-                              >
-                                Chỉnh sửa
-                              </Typography>
-                              {/* <Link 
-                                to={"/dashboard" + PATH_EDIT_CURRICULUM + "/1"}
-                                className="text-xs font-semibold text-blue-gray-600 bg-green-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
-                              >Chỉnh sửa</Link> */}
-                            </MenuItem>
-                            <MenuItem>
-                              <Typography
-                                as="a"
-                                href={'#'}
-                                className="text-xs font-semibold text-blue-gray-600 bg-red-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
-                              >
-                                Xóa
-                              </Typography>
-                            </MenuItem>
-                          </MenuList>
-                        </Menu>
+                          <Menu placement="left-start">
+                            <MenuHandler>
+                              <IconButton size="sm" variant="text" color="blue-gray">
+                                <EllipsisVerticalIcon
+                                  strokeWidth={3}
+                                  fill="currenColor"
+                                  className="h-6 w-6"
+                                />
+                              </IconButton>
+                            </MenuHandler>
+                            <MenuList>
+                              <MenuItem>
+                                <Link
+                                  to={"/dashboard" + PATH_EDIT_CURRICULUM}
+                                  className="text-xs font-semibold text-blue-gray-600 bg-green-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
+                                >
+                                  Xuất file word
+                                </Link>
+                              </MenuItem>
+                              <MenuItem>
+                                <Link
+                                  to={"/dashboard" + PATH_EDIT_CURRICULUM}
+                                  className="text-xs font-semibold text-blue-gray-600 bg-green-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
+                                >
+                                  Chỉnh sửa
+                                </Link>
+                              </MenuItem>
+                              <MenuItem>
+                                <Link
+                                  to={'#'}
+                                  className="text-xs font-semibold text-blue-gray-600 bg-red-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
+                                >
+                                  Xóa
+                                </Link>
+                              </MenuItem>
+                            </MenuList>
+                          </Menu>
                         </td>
                       </tr>
                     );

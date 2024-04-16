@@ -102,7 +102,7 @@ export function Curriculums() {
                         </Typography>
                       </td>
                       <td className={`flex flex-col gap-2 ${className}`}>
-                      <Menu placement="left-start">
+                        <Menu placement="left-start">
                           <MenuHandler>
                             <IconButton size="sm" variant="text" color="blue-gray">
                               <EllipsisVerticalIcon
@@ -113,32 +113,29 @@ export function Curriculums() {
                             </IconButton>
                           </MenuHandler>
                           <MenuList>
-                          <MenuItem>
-                              <Typography
-                                as="a"
-                                href={"/dashboard" + PATH_EDIT_CURRICULUM}
-                                className="text-xs font-semibold text-blue-gray-600 bg-green-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
-                              >
-                                Xuất file word
-                              </Typography>
+                            <MenuItem>
+                                <Link
+                                  to={"/dashboard" + PATH_EDIT_CURRICULUM}
+                                  className="text-xs font-semibold text-blue-gray-600 bg-green-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
+                                >
+                                  Xuất file word
+                                </Link>
                             </MenuItem>
                             <MenuItem>
-                              <Typography
-                                as="a"
-                                href={"/dashboard" + PATH_EDIT_CURRICULUM}
+                              <Link
+                                to={"/dashboard" + PATH_EDIT_CURRICULUM}
                                 className="text-xs font-semibold text-blue-gray-600 bg-green-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
                               >
                                 Chỉnh sửa
-                              </Typography>
+                              </Link>
                             </MenuItem>
                             <MenuItem>
-                              <Typography
-                                as="a"
-                                href={'#'}
+                              <Link
+                                to={'#'}
                                 className="text-xs font-semibold text-blue-gray-600 bg-red-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
                               >
                                 Xóa
-                              </Typography>
+                              </Link>
                             </MenuItem>
                           </MenuList>
                         </Menu>
