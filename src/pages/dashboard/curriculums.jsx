@@ -8,17 +8,27 @@ import {
   Tooltip,
   Progress,
 } from "@material-tailwind/react";
-import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 import { curriculumData, projectsTableData } from "@/data";
+import { PATH_EDIT_CURRICULUM, PATH_ADD_CURRICULUM } from "@/path";
+import { PlusIcon, EllipsisVerticalIcon } from "@heroicons/react/24/outline";
+import { IconButton, Menu, MenuHandler, MenuList, MenuItem } from "@material-tailwind/react";
+import { Link } from "react-router-dom";
 
 export function Curriculums() {
   return (
     <div className="mt-12 mb-8 flex flex-col gap-12">
       <Card>
         <CardHeader variant="gradient" color="gray" className="mb-8 p-6">
-          <Typography variant="h6" color="white">
-            Giáo trình / Chương trình khung
-          </Typography>
+          <div className="flex justify-between">
+            <Typography variant="h6" color="white">
+              Giáo trình / Chương trình khung
+            </Typography>
+            <IconButton size="sm" variant="text" color="white">
+              <Link to={"/dashboard"+PATH_ADD_CURRICULUM}>
+                <PlusIcon className="h-6 w-6" />
+              </Link>
+            </IconButton>
+          </div>
         </CardHeader>
         <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
           <table className="w-full min-w-[640px] table-auto">
@@ -92,20 +102,46 @@ export function Curriculums() {
                         </Typography>
                       </td>
                       <td className={`flex flex-col gap-2 ${className}`}>
-                        <Typography
-                          as="a"
-                          href={`curriculums/edit/3`}
-                          className="text-xs font-semibold text-blue-gray-600 bg-green-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
-                        >
-                          Chỉnh sửa
-                        </Typography>
-                        <Typography
-                          as="a"
-                          href={`curriculums/delete/3`}
-                          className="text-xs font-semibold text-blue-gray-600 bg-red-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
-                        >
-                          Xóa
-                        </Typography>
+                      <Menu placement="left-start">
+                          <MenuHandler>
+                            <IconButton size="sm" variant="text" color="blue-gray">
+                              <EllipsisVerticalIcon
+                                strokeWidth={3}
+                                fill="currenColor"
+                                className="h-6 w-6"
+                              />
+                            </IconButton>
+                          </MenuHandler>
+                          <MenuList>
+                          <MenuItem>
+                              <Typography
+                                as="a"
+                                href={"/dashboard" + PATH_EDIT_CURRICULUM}
+                                className="text-xs font-semibold text-blue-gray-600 bg-green-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
+                              >
+                                Xuất file word
+                              </Typography>
+                            </MenuItem>
+                            <MenuItem>
+                              <Typography
+                                as="a"
+                                href={"/dashboard" + PATH_EDIT_CURRICULUM}
+                                className="text-xs font-semibold text-blue-gray-600 bg-green-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
+                              >
+                                Chỉnh sửa
+                              </Typography>
+                            </MenuItem>
+                            <MenuItem>
+                              <Typography
+                                as="a"
+                                href={'#'}
+                                className="text-xs font-semibold text-blue-gray-600 bg-red-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
+                              >
+                                Xóa
+                              </Typography>
+                            </MenuItem>
+                          </MenuList>
+                        </Menu>
                       </td>
                     </tr>
                   );
