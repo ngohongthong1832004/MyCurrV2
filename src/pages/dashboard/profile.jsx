@@ -32,6 +32,18 @@ export function Profile() {
                 >
                   CNTT
                 </Typography>
+                <Typography
+                  variant="small"
+                  className="font-normal text-blue-gray-600"
+                >
+                  2021
+                </Typography>
+                <Typography
+                  variant="small"
+                  className="font-normal text-blue-gray-600"
+                >
+                  17521274
+                </Typography>
               </div>
             </div>
           </div>

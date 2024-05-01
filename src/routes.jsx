@@ -83,7 +83,7 @@ export const routes = [
       {
         icon: <HomeIcon {...icon} />,
         name: "EditCurr",
-        path:  PATH_EDIT_CURRICULUM,
+        path:  PATH_EDIT_CURRICULUM + "/:id",
         element: <CurriculumsEdit />,
       },
       {
@@ -95,7 +95,7 @@ export const routes = [
       {
         icon: <HomeIcon {...icon} />,
         name: "EditCourse",
-        path: PATH_EDIT_COURSE,
+        path: PATH_EDIT_COURSE + "/:id",
         element: <CoursesEdit />,
       },
       {

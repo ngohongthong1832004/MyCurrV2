@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Typography,
   Card,
@@ -21,25 +21,87 @@ import {
   PlusIcon
 } from "@heroicons/react/24/outline";
 import { StatisticsCard } from "@/widgets/cards";
+import { UsersIcon, DocumentTextIcon, DocumentDuplicateIcon } from "@heroicons/react/24/solid";
 
-import {
-  statisticsCardsData,
-  projectsTableData,
-  courseData,
-  authorsTableData,
-  curriculumData,
-} from "@/data";
-import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import { PATH_EDIT_COURSE, PATH_EDIT_CURRICULUM } from "@/path";
 import { Link } from "react-router-dom";
+import { getUser, getCourse, getCurriculum } from "@/api/getDataAPI";
+
+
+
 
 
 
 export function Home() {
+
+  const [dataUser, setDataUser] = useState([]);
+  const [dataCourse, setDataCourse] = useState([]);
+  const [dataCurriculum, setDataCurriculum] = useState([]);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const dataUser = await getUser();
+      console.log(dataUser);
+      setDataUser(dataUser);
+
+      const dataCourse = await getCourse();
+      console.log(dataCourse);
+      setDataCourse(dataCourse);
+
+      const dataCurriculum = await getCurriculum();
+      console.log(dataCurriculum);
+      setDataCurriculum(dataCurriculum);
+    };
+    fetchData();
+  }, []);  
+
+  
+
+
+  const statisticsCardsData = [
+    {
+      color: "gray",
+      icon: UsersIcon,
+      title: "Giảng viên",
+      value: dataUser.length,
+      // footer: {
+      //   color: "text-green-500",
+      //   value: "+1",
+      //   label: "Bắp Hồng Pine (CNTT) (2021-2022)",
+      // },
+    },
+    {
+      color: "gray",
+      icon: DocumentTextIcon,
+      title: "Đề cương môn học",
+      value: dataCourse.length,
+      // footer: {
+      //   color: "text-green-500",
+      //   value: "+9",
+      //   label: "than last month",
+      // },
+    },
+    {
+      color: "gray",
+      icon: DocumentDuplicateIcon,
+      title: "Giáo trình / Chương trình khung",
+      value: dataCurriculum.length,
+      // footer: {
+      //   color: "text-red-500",
+      //   value: "-1",
+      //   label: "last year",
+      // },
+    },
+  ];
+  
+
+
+
   return (
     <div className="mt-12">
       <div className="mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
-        {statisticsCardsData.map(({ icon, title, footer, ...rest }) => (
+        {statisticsCardsData.map(({ icon, title, ...rest }) => (
           <StatisticsCard
             key={title}
             {...rest}
@@ -47,12 +109,12 @@ export function Home() {
             icon={React.createElement(icon, {
               className: "w-6 h-6 text-white",
             })}
-            footer={
-              <Typography className="font-normal text-blue-gray-600">
-                <strong className={footer.color}>{footer.value}</strong>
-                &nbsp;{footer.label}
-              </Typography>
-            }
+            // footer={
+            //   <Typography className="font-normal text-blue-gray-600">
+            //     <strong className={footer.color}>{footer.value}</strong>
+            //     &nbsp;{footer.label}
+            //   </Typography>
+            // }
           />
         ))}
       </div>
@@ -91,15 +153,15 @@ export function Home() {
                 </tr>
               </thead>
               <tbody>
-                {courseData.slice(0, 5).map(
-                  ({ name, email, teacher, status, date }, key) => {
-                    const className = `py-3 px-5 ${key === courseData.length - 1
+                {dataCourse.slice(0, 5).map(
+                  ({ name, id_course_main, email, teacher, status, time_update }, key) => {
+                    const className = `py-3 px-5 ${key === dataCourse.length - 1
                       ? ""
                       : "border-b border-blue-gray-50"
                       }`;
 
                     return (
-                      <tr key={name}>
+                      <tr key={id_course_main}>
                         <td className={className}>
                           <div className="flex items-center gap-4">
                             <div>
@@ -115,7 +177,27 @@ export function Home() {
                         </td>
                         <td className={className}>
                           <Typography className="text-xs font-semibold text-blue-gray-600">
-                            {teacher}
+                            {
+                              teacher.map((teacherId, index) => {
+                                let teacherName = "";
+                                for (let i = 0; i < dataUser.length; i++) {
+                                  if (teacherId === dataUser[i].id_user) {
+                                    teacherName = dataUser[i].first_name + " " + dataUser[i].last_name;
+                                    break; // Thoát khỏi vòng lặp khi tìm thấy giáo viên tương ứng
+                                  }
+                                }
+                                
+                                // Kiểm tra xem đã là giáo viên cuối cùng chưa
+                                const isLastTeacher = index === teacher.length - 1;
+
+                                return (
+                                  <span key={index}>
+                                    {teacherName}
+                                    {isLastTeacher ? "" : ", "}
+                                  </span>
+                                );
+                              })
+                            }
                           </Typography>
                           <Typography className="text-xs font-normal text-blue-gray-500">
                             {email}
@@ -130,7 +212,7 @@ export function Home() {
                         </td>
                         <td className={className}>
                           <Typography className="text-xs font-semibold text-blue-gray-600">
-                            {date}
+                            {time_update}
                           </Typography>
                         </td>
                         <td className={`flex flex-col gap-2 ${className}`}>
@@ -148,14 +230,14 @@ export function Home() {
                               <MenuItem>
                                 <Link
                                   to={"/dashboard" + PATH_EDIT_COURSE}
-                                  className="text-xs font-semibold text-blue-gray-600 bg-green-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
+                                  className="text-xs font-semibold text-blue-gray-600 bg-blue-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
                                 >
                                   Xuất file word
                                 </Link>
                               </MenuItem>
                               <MenuItem>
                                 <Link
-                                  to={"/dashboard" + PATH_EDIT_COURSE}
+                                  to={"/dashboard" + PATH_EDIT_COURSE + "/" + id_course_main}
                                   className="text-xs font-semibold text-blue-gray-600 bg-green-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
                                 >
                                   Chỉnh sửa
@@ -191,17 +273,12 @@ export function Home() {
             <Typography variant="h6" color="blue-gray" className="mb-2">
               Giảng viên
             </Typography>
-            <Typography
-              variant="small"
-              className="flex items-center gap-1 font-normal text-blue-gray-600"
-            >
-            </Typography>
           </CardHeader>
           <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
             <table className="w-full table-auto">
               <thead>
                 <tr>
-                  {["Tên Giảng viên", "Khoa"].map(
+                  {["Tên Giảng viên", "Khoa", "Gmail"].map(
                     (el) => (
                       <th
                         key={el}
@@ -219,22 +296,22 @@ export function Home() {
                 </tr>
               </thead>
               <tbody>
-                {authorsTableData.map(
-                  ({ name, education, department }, key) => {
-                    const className = `py-3 px-5 ${key === projectsTableData.length - 1
+                {dataUser.map(
+                  ({ first_name, last_name, id_user, education, department, gmail }, key) => {
+                    const className = `py-3 px-5 ${key === dataUser.length - 1
                       ? ""
                       : "border-b border-blue-gray-50"
                       }`;
 
                     return (
-                      <tr key={name}>
+                      <tr key={id_user}>
                         <td className={className}>
                           <div className="flex items-center gap-4">
                             <Typography className="text-xs font-semibold text-blue-gray-600">
-                              {name}
+                              {first_name + " " + last_name}
                             </Typography>
                             <Typography className="text-xs font-normal text-blue-gray-500">
-                              {education}
+                              {/* {education} */}
                             </Typography>
                           </div>
                         </td>
@@ -245,6 +322,15 @@ export function Home() {
                             className="font-bold"
                           >
                             {department}
+                          </Typography>
+                        </td>
+                        <td className={className}>
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-bold"
+                          >
+                            {gmail}
                           </Typography>
                         </td>
                       </tr>
@@ -288,15 +374,15 @@ export function Home() {
                 </tr>
               </thead>
               <tbody>
-                {curriculumData.slice(0, 5).map(
-                  ({ coursesName, coursesId, grade, status, date }, key) => {
-                    const className = `py-3 px-5 ${key === curriculumData.length - 1
+                {dataCurriculum.slice(0, 5).map(
+                  ({ name, id_curriculum, grade, status, year }, key) => {
+                    const className = `py-3 px-5 ${key === dataCurriculum.length - 1
                       ? ""
                       : "border-b border-blue-gray-50"
                       }`;
 
                     return (
-                      <tr key={name}>
+                      <tr key={id_curriculum}>
                         <td className={className}>
                           <div className="flex items-center gap-4">
                             <div>
@@ -305,10 +391,10 @@ export function Home() {
                                 color="blue-gray"
                                 className="font-semibold"
                               >
-                                {coursesName}
+                                {name}
                               </Typography>
                               <Typography className="text-xs font-normal text-blue-gray-500">
-                                {coursesId}
+                                {id_curriculum}
                               </Typography>
                             </div>
                           </div>
@@ -335,7 +421,7 @@ export function Home() {
                         </td>
                         <td className={className}>
                           <Typography className="text-xs font-semibold text-blue-gray-600">
-                            {date}
+                            {year}
                           </Typography>
                         </td>
                         <td className={`flex flex-col gap-2 ${className}`}>
@@ -353,14 +439,14 @@ export function Home() {
                               <MenuItem>
                                 <Link
                                   to={"/dashboard" + PATH_EDIT_CURRICULUM}
-                                  className="text-xs font-semibold text-blue-gray-600 bg-green-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
+                                  className="text-xs font-semibold text-blue-gray-600 bg-blue-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
                                 >
                                   Xuất file word
                                 </Link>
                               </MenuItem>
                               <MenuItem>
                                 <Link
-                                  to={"/dashboard" + PATH_EDIT_CURRICULUM}
+                                  to={"/dashboard" + PATH_EDIT_CURRICULUM + "/" + id_curriculum}
                                   className="text-xs font-semibold text-blue-gray-600 bg-green-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
                                 >
                                   Chỉnh sửa
