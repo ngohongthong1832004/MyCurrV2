@@ -20,6 +20,7 @@ import {
   PATH_ADD_COURSE,
   PATH_ADD_CURRICULUM ,
 } from '@/path'
+import CoursesAdd from "./pages/dashboard/addCourse";
 
 const icon = {
   className: "w-5 h-5 text-inherit",
@@ -102,7 +103,7 @@ export const routes = [
         icon: <HomeIcon {...icon} />,
         name: "addCourse",
         path: PATH_ADD_COURSE,
-        element: <CoursesEdit />,
+        element: <CoursesAdd />,
       },
     ],
   }

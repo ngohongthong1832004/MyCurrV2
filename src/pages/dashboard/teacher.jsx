@@ -10,8 +10,23 @@ import {
 } from "@material-tailwind/react";
 import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 import { authorsTableData } from "@/data";
+import { useEffect, useState } from "react";
+import { getUser } from "@/api/getDataAPI";
 
 export function Teacher() {
+  const [dataUser, setDataUser] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const dataUser = await getUser();
+      console.log(dataUser);
+      setDataUser(dataUser);
+    };
+    fetchData();
+  }, []);  
+
+
+
   return (
     <div className="mt-12 mb-8 flex flex-col gap-12">
       <Card>
@@ -24,7 +39,7 @@ export function Teacher() {
           <table className="w-full min-w-[640px] table-auto">
             <thead>
               <tr>
-                {["Giảng viên", "Email", "Trình độ", "Khoa"].map((el) => (
+                {["Giảng viên", "Gmail", "Trình độ", "Khoa"].map((el) => (
                   <th
                     key={el}
                     className="border-b border-blue-gray-50 py-3 px-5 text-left"
@@ -40,10 +55,10 @@ export function Teacher() {
               </tr>
             </thead>
             <tbody>
-              {authorsTableData.map(
-                ({ name, email, education,department }, key) => {
+              {dataUser.map(
+                ({ first_name, last_name, name, gmail, education,department }, key) => {
                   const className = `py-3 px-5 ${
-                    key === authorsTableData.length - 1
+                    key === dataUser.length - 1
                       ? ""
                       : "border-b border-blue-gray-50"
                   }`;
@@ -58,14 +73,14 @@ export function Teacher() {
                               color="blue-gray"
                               className="font-semibold"
                             >
-                              {name}
+                              {first_name} {last_name}
                             </Typography>
                           </div>
                         </div>
                       </td>
                       <td className={className}>
                         <Typography className="text-xs font-normal text-blue-gray-500">
-                          {email}
+                          {gmail}
                         </Typography>
                       </td>
                       <td className={className}>

@@ -26,6 +26,7 @@ import { UsersIcon, DocumentTextIcon, DocumentDuplicateIcon } from "@heroicons/r
 import { PATH_EDIT_COURSE, PATH_EDIT_CURRICULUM } from "@/path";
 import { Link } from "react-router-dom";
 import { getUser, getCourse, getCurriculum } from "@/api/getDataAPI";
+import { DeleteCourse } from "@/api/deleteAPI";
 
 
 
@@ -96,7 +97,10 @@ export function Home() {
   ];
   
 
-
+  const handleDeleteCourse = async (id) => {
+    console.log(id);
+    const res = await DeleteCourse(id);
+  }
 
   return (
     <div className="mt-12">
@@ -169,8 +173,9 @@ export function Home() {
                                 variant="small"
                                 color="blue-gray"
                                 className="font-semibold"
+                                dangerouslySetInnerHTML={{ __html: name }}
                               >
-                                {name}
+                                {/* {name} */}
                               </Typography>
                             </div>
                           </div>
@@ -199,8 +204,8 @@ export function Home() {
                               })
                             }
                           </Typography>
-                          <Typography className="text-xs font-normal text-blue-gray-500">
-                            {email}
+                          <Typography className="text-xs font-normal text-blue-gray-500" dangerouslySetInnerHTML={{ __html: email }}>
+                            {/* {email} */}
                           </Typography>
                         </td>
                         <td className={className}>
@@ -212,7 +217,7 @@ export function Home() {
                         </td>
                         <td className={className}>
                           <Typography className="text-xs font-semibold text-blue-gray-600">
-                            {time_update}
+                            {time_update.split("T")[0]}
                           </Typography>
                         </td>
                         <td className={`flex flex-col gap-2 ${className}`}>
@@ -246,6 +251,9 @@ export function Home() {
                               <MenuItem>
                                 <Link
                                   to={'#'}
+                                  onClick={() => {
+                                    handleDeleteCourse(id_course_main);
+                                  }}
                                   className="text-xs font-semibold text-blue-gray-600 bg-red-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
                                 >
                                   Xóa
@@ -421,7 +429,7 @@ export function Home() {
                         </td>
                         <td className={className}>
                           <Typography className="text-xs font-semibold text-blue-gray-600">
-                            {year}
+                            {year.split("T")[0]}
                           </Typography>
                         </td>
                         <td className={`flex flex-col gap-2 ${className}`}>

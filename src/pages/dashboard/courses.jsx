@@ -107,19 +107,13 @@ export function Courses() {
                                 <td className={className}>
                                   <div className="flex items-center gap-4">
                                     <div>
-                                      <Typography
-                                        variant="small"
-                                        color="blue-gray"
-                                        className="font-semibold"
-                                      >
-                                        {name}
-                                      </Typography>
+                                      <Typography variant="small" color="blue-gray" className="font-semibold" dangerouslySetInnerHTML={{ __html: name }} />
                                     </div>
                                   </div>
                                 </td>
                                 <td className={className}>
                                   <Typography className="text-xs font-semibold text-blue-gray-600">
-                                    {time_update}
+                                    {time_update.split("T")[0]}
                                   </Typography>
                                 </td>
                                 <td className={className}>
@@ -203,13 +197,7 @@ export function Courses() {
                       <td className={className}>
                         <div className="flex items-center gap-4">
                           <div>
-                            <Typography
-                              variant="small"
-                              color="blue-gray"
-                              className="font-semibold"
-                            >
-                              {name}
-                            </Typography>
+                            <Typography variant="small" color="blue-gray" className="font-semibold" dangerouslySetInnerHTML={{ __html: name }} />
                           </div>
                         </div>
                       </td>
@@ -250,7 +238,7 @@ export function Courses() {
                       </td>
                       <td className={className}>
                         <Typography className="text-xs font-semibold text-blue-gray-600">
-                          {time_update}
+                          {time_update.split("T")[0]}
                         </Typography>
                       </td>
                       <td className={`flex flex-col gap-2 ${className}`}>
