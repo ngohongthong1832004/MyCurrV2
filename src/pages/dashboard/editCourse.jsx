@@ -9,8 +9,9 @@ import {
   Tooltip,
   Progress,
   Textarea,
+  // Select,
 } from "@material-tailwind/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { courseData } from "@/data";
 import { PATH_EDIT_COURSE, PATH_ADD_COURSE } from "@/path";
 import { PlusIcon, EllipsisVerticalIcon } from "@heroicons/react/24/outline";
@@ -19,13 +20,61 @@ import { Link } from "react-router-dom";
 import ReactQuill from "react-quill"
 import 'react-quill/dist/quill.snow.css'
 import { MinusIcon } from "@heroicons/react/24/solid";
+import { CreateCourse } from "@/api/postDataAPI";
+import { Select } from 'antd';
+import { getCourse, getCourseById, getUser } from "@/api/getDataAPI";
+import { putCourse } from "@/api/putDataAPI";
 
 
 export function CoursesEdit() {
 
+  const [dataUser, setDataUser] = useState([]);
+  const [dataCourse, setDataCourse] = useState([]);
+  const [initialCourse, setInitialCourse] = useState({});
+  const url = window.location.href;
+  const lastParam = url.split("/").pop();
+
+  useEffect(() => {
+    
+    
+
+    const fetchData = async () => {
+      const dataUser = await getUser();
+      setDataUser(dataUser);
+
+      const dataCourse = await getCourse();
+      // console.log(dataCourse);
+      setDataCourse(dataCourse);
+
+      const courseId = await getCourseById(lastParam);
+      // console.log(courseId);
+      setInitialCourse(courseId);
+
+    };
+    fetchData();
+  }, []);
+
+  // console.log(initialCourse);
+
+
+
+
+
   // 1
-  const [title, setTitle] = useState("Nhập tên học phần");
-  const [courseId, setCourseId] = useState("Nhập mã học phần");
+  const [title, setTitle] = useState(initialCourse.title);
+
+  console.log(title);
+  const [courseId, setCourseId] = useState("");
+  const [idCourse, setIdCourse] = useState("")
+
+  console.log(courseId);
+
+  const handleChangeId = (content, delta, source, editor) => {
+    setCourseId(content);
+    const id = editor.getText();
+    setIdCourse(id);
+  };
+
 
   // 2
   const [creditPractical, setCreditPractical] = useState(0);
@@ -33,85 +82,142 @@ export function CoursesEdit() {
   const [creditSelfStudy, setCreditSelfStudy] = useState(0);
 
   // 3
-
+  const [teacher, setTeacher] = useState([]);
 
   // 4
-  const [des, setDes] = useState("Nhập tài liệu học tập");
+  const [des, setDes] = useState("");
+
+  // 5
+  const [infoDes1, setInfoDes1] = useState("");
+  const [infoDes2, setInfoDes2] = useState("");
+  const [subject_similar, setSubject_similar] = useState([]);
+  const [subject_pre, setSubject_pre] = useState([]);
 
 
   // 6
-  const rowCDR = [
+  const rowCLOs1 = [
     {
       id: 0,
       value: {
-        clo: 1,
         content: '',
-        soPerPi: '',
+        PLO: '',
       },
       className: '',
     },
   ];
-  const [tableRowCDR, setTableRowCDR] = useState(rowCDR);
-  const addTableRowCDR = () => {
-    setTableRowCDR((r) => {
+  const [tableRowCLOs1, setTableRowCLOs1] = useState(rowCLOs1);
+  const addTableRowCLOs1 = () => {
+    setTableRowCLOs1((r) => {
       let idx = r[r.length - 1].id + 1;
       return [
         ...r,
         {
           id: idx,
           value: {
-            clo: r.length + 1,
             content: '',
-            soPerPi: '',
+            PLO: '',
           },
           className: '',
         },
       ];
     });
   };
-  const deleteTableRowsCDR = (index) => {
-    const rows = [...tableRowCDR];
+  const deleteTableRowsCLOs1 = (index) => {
+    const rows = [...tableRowCLOs1];
     rows.splice(index, 1);
-    setTableRowCDR(rows);
+    setTableRowCLOs1(rows);
   };
 
-  const handleTableRowsCDR = (index, key, value) => {
-    setTableRowCDR((prev) => {
+  const handleTableRowsCLOs1 = (index, key, value) => {
+    setTableRowCLOs1((prev) => {
       prev[index].value[key] = value;
       return prev;
     });
   };
 
-  // 7 
-  const rowKHGD = [
+
+  const rowCLOs2 = [
     {
       id: 0,
       value: {
-        order: 1,
-        content: '',
-        nLessons: 0,
-        clos: '',
-        method: '',
-        bonus: '',
+        a: 0,
+        b: 0,
+        c: 0,
+        d: 0,
+        e: 0,
+        f: 0,
+        g: 0,
+        h: 0,
       },
       className: '',
     },
   ];
-  const [tableRowKHGD, setTableRowKHGD] = useState(rowKHGD);
-  const addTableRowKHGD = () => {
-    setTableRowKHGD((r) => {
+  const [tableRowCLOs2, setTableRowCLOs2] = useState(rowCLOs2);
+
+  const addTableRowCLOs2 = () => {
+    setTableRowCLOs2((r) => {
       let idx = r[r.length - 1].id + 1;
       return [
         ...r,
         {
           id: idx,
           value: {
+            a: 0,
+            b: 0,
+            c: 0,
+            d: 0,
+            e: 0,
+            f: 0,
+            g: 0,
+            h: 0,
+          },
+          className: '',
+        },
+      ];
+    });
+  };
+  const deleteTableRowsCLOs2 = (index) => {
+    const rows = [...tableRowCLOs2];
+    rows.splice(index, 1);
+    setTableRowCLOs2(rows);
+  };
+
+  const handleTableRowsCLOs2 = (index, key, value) => {
+    const newTableRowsCLOs2 = [...tableRowCLOs2];
+    newTableRowsCLOs2[index].value[key] = value;
+    setTableRowCLOs2(newTableRowsCLOs2);
+  };
+
+  // 7 
+  const rowContent = [
+    {
+      id: 0,
+      value: {
+        order: 1,
+        content: "",
+        method: "",
+        CLOs : "",
+        number_session: 0,
+        self_study: ""
+      },
+      className: '',
+    },
+  ];
+  const [tableRowContent, setTableRowContent] = useState(rowContent);
+  const addTableRowContent = () => {
+    setTableRowContent((r) => {
+      let idx = r[r.length - 1].id + 1;
+      return [
+        ...r, 
+        {
+          id: idx,
+          value: {
             order: idx,
-            content: '',
-            nLessons: 0,
-            clos: '',
-            method: '',
-            bonus: '',
+            content: "",
+            method: "",
+            CLOs : "",
+            number_session: 0,
+            self_study: ""
           },
           className: '',
         },
@@ -119,13 +225,13 @@ export function CoursesEdit() {
     });
   };
   const deleteTableRowsKHGD = (index) => {
-    const rows = [...tableRowKHGD];
+    const rows = [...tableRowContent];
     rows.splice(index, 1);
-    setTableRowKHGD(rows);
+    setTableRowContent(rows);
   };
 
   const handleTableRowsKHGD = (index, key, value) => {
-    setTableRowKHGD((prev) => {
+    setTableRowContent((prev) => {
       prev[index].value[key] = value;
       return prev;
     });
@@ -133,23 +239,22 @@ export function CoursesEdit() {
 
 
   // 8
-  const rowPPDG = [
+  const rowCLOs3 = [
     {
       id: 0,
       value: {
         order: 1,
-        clo: 0,
-        test: '',
+        exam: 0,
         method: '',
-        proportion: 0,
-        target: 0,
+        point: 0,
+        criteria: 0,
       },
       className: '',
     },
   ];
-  const [tableRowPPDG, setTableRowPPDG] = useState(rowPPDG);
-  const addTableRowPPDG = () => {
-    setTableRowPPDG((r) => {
+  const [tableRowCLOs3, setTableRowCLOs3] = useState(rowCLOs3);
+  const addTableRowCLOs3 = () => {
+    setTableRowCLOs3((r) => {
       let idx = r[r.length - 1].id + 1;
 
       return [
@@ -158,11 +263,10 @@ export function CoursesEdit() {
           id: idx,
           value: {
             order: idx,
-            clo: 0,
-            test: '',
+            exam: 0,
             method: '',
-            proportion: 0,
-            target: 0,
+            point: 0,
+            criteria: 0,
           },
           className: '',
         },
@@ -170,15 +274,14 @@ export function CoursesEdit() {
     });
   };
 
-  const deleteTableRowsPPDG = (index) => {
-    const newTableRowsPPDG = [...tableRowPPDG];
-    newTableRowsPPDG.splice(index, 1);
-    setTableRowPPDG(newTableRowsPPDG);
-    console.log(newTableRowsPPDG);
+  const deleteTableRowsCLOs3 = (index) => {
+    const newTableRowsCLOs3 = [...tableRowCLOs3];
+    newTableRowsCLOs3.splice(index, 1);
+    setTableRowCLOs3(newTableRowsCLOs3);
   };
 
-  const handleTableRowsPPDG = (index, key, value) => {
-    setTableRowPPDG((prev) => {
+  const handleTableRowsCLOs3 = (index, key, value) => {
+    setTableRowCLOs3((prev) => {
       prev[index].value[key] = value;
 
       return prev;
@@ -229,28 +332,125 @@ export function CoursesEdit() {
     });
   };
 
-  const data = {
-    // title : "nhap ten hoc phan",
-    // courseId : "432302",
-  }
 
+  // console.log(new Date().toISOString().split("T")[0],);
+
+  // time update
+  const [timeUpdate, setTimeUpdate] = useState(new Date().toISOString().split("T")[0]);
+  console.log(timeUpdate);
+  
+
+  // primary teacher
+  const [primaryTeacher, setPrimaryTeacher] = useState([]);
+
+  // head department
+  const [headDepartment, setHeadDepartment] = useState([]);
 
 
 
   const handleSave = () => {
-    const course = {
+
+    const param = {
+      id_course_main: idCourse.replace(/\s/g, ''),
+      name: title,
       title: title,
-      courseId: courseId,
-      creditPractical: creditPractical,
-      creditTheory: creditTheory,
-      creditSelfStudy: creditSelfStudy,
-      // lecturers: lecturers,
-      des,
+      number_credit: creditPractical + ', ' + creditTheory + ', ' + creditSelfStudy + ", " + (creditPractical + creditTheory + creditSelfStudy),
+      document: des,
+      target: infoDes1,
+      description: infoDes2,
+      subject_similar: subject_similar.map(e => { return { id: e, name: e } }),
+      subject_pre: subject_pre.map(e => { return { id: e, name: e } }),
+      CLOs1: tableRowCLOs1.map(e => { return { ...e.value, order  : e.id + 1 } }),
+      CLOs2: tableRowCLOs2.map(e => { return { ...e.value, order  : e.id + 1 } }),
+      CLOs3: tableRowCLOs3.map(e => { return { ...e.value} }),
+      content: tableRowContent.map(e => { return { ...e.value} }),
+      time_update: timeUpdate,
+      primary_teacher_ids: primaryTeacher,
+      head_department_ids: headDepartment,
+      teachers_ids: teacher
     }
 
-    console.log(course)
+    const data = putCourse(lastParam,param);
 
   }
+
+
+  console.log(tableRowCLOs1, "tableRowCLOs1");
+
+  useEffect(() => {
+
+    console.log(initialCourse);
+
+    if (initialCourse) {
+      setTitle(initialCourse.title);
+      setCourseId(initialCourse.id_course_main);
+      setCreditPractical(initialCourse.number_credit?.split(", ")[0]);
+      setCreditTheory(initialCourse.number_credit?.split(", ")[1]);
+      setCreditSelfStudy(initialCourse.number_credit?.split(", ")[2]);
+      setDes(initialCourse.document);
+      setInfoDes1(initialCourse.target);
+      setInfoDes2(initialCourse.description);
+      setSubject_similar(initialCourse.subject_similar?.map(e => e.name));
+      setSubject_pre(initialCourse.subject_pre?.map(e => e.name));
+      setTableRowCLOs1(initialCourse.CLOs1?.map((e, i) => {
+        return {
+          className: '',
+          id: i,
+          value: {
+            content: e.content,
+            PLO: e.PLO
+          }
+        }
+      }));
+      setTableRowCLOs2(initialCourse.CLOs2?.map((e, i) => {
+        return {
+          className: '',
+          id: i,
+          value: {
+            a: e.a,
+            b: e.b,
+            c: e.c,
+            d: e.d,
+            e: e.e,
+            f: e.f,
+            g: e.g,
+            h: e.h
+          }
+        }
+      }));
+      setTableRowCLOs3(initialCourse.CLOs3?.map((e, i) => {
+        return {
+          className: '',
+          id: i,
+          value: {
+            order: i + 1,
+            exam: e.exam,
+            method: e.method,
+            point: e.point,
+            criteria: e.criteria
+          }
+        }
+      }));
+      setTableRowContent(initialCourse.content?.map((e, i) => {
+        return {
+          className: '',
+          id: i,
+          value: {
+            order: i + 1,
+            content: e.content,
+            method: e.method,
+            CLOs : e.CLOs,
+            number_session: e.number_session,
+            self_study: e.self_study
+          }
+        }
+      }));
+      setTimeUpdate(initialCourse.time_update?.split("T")[0]);
+      setPrimaryTeacher(initialCourse.primary_teacher);
+      setHeadDepartment(initialCourse.head_department);
+      setTeacher(initialCourse.teacher);
+    }
+  }, [initialCourse]);
 
 
 
@@ -263,13 +463,16 @@ export function CoursesEdit() {
       <div className="flex mb-[5rem]">
         <ReactQuill
           className="flex-1"
-          value={data?.title || title}
+          value={title}
           onChange={setTitle}
+          placeholder="Nhập tên học phần"
         />
         <ReactQuill
+          type="number"
           className="flex-1"
-          value={data?.courseId || courseId}
-          onChange={setCourseId}
+          value={courseId}
+          placeholder="Nhập mã học phần"
+          onChange={handleChangeId}
         />
       </div>
       {/* 2 */}
@@ -285,6 +488,7 @@ export function CoursesEdit() {
             labelProps={{
               className: "before:content-none after:content-none",
             }}
+            value={creditPractical}
             min={0}
             onChange={(e) => setCreditPractical(Number(e.target.value))}
           />
@@ -299,6 +503,7 @@ export function CoursesEdit() {
             labelProps={{
               className: "before:content-none after:content-none",
             }}
+            value={creditTheory}
             min={0}
             onChange={(e) => setCreditTheory(Number(e.target.value))}
           />
@@ -313,6 +518,7 @@ export function CoursesEdit() {
             labelProps={{
               className: "before:content-none after:content-none",
             }}
+            value={creditSelfStudy}
             min={0}
             onChange={(e) => setCreditSelfStudy(Number(e.target.value))}
           />
@@ -322,14 +528,23 @@ export function CoursesEdit() {
             Tổng tín chỉ
           </Typography>
           <Typography variant="h6" color="blue-gray" className="min-w-[200px] block">
-            {creditPractical + creditTheory + creditSelfStudy}
-          </Typography>
+            {/* {creditPractical + creditTheory + creditSelfStudy} */}
+            {(creditPractical - 1) + (creditTheory - 1) + (creditSelfStudy - 1) + 3}
+          </Typography> 
         </div>
       </div>
       {/* 3 */}
       <h4 className="font-bold">3.	Giảng viên phụ trách</h4>
-      <div className="mb-5 bg-[#cccc]">
-        Làm ô search để chọn select cho nhiều cái
+      <div className="mb-5">
+        <Select
+          className="mt-2"
+          mode="multiple"
+          value={teacher}
+          style={{ width: '100%' }}
+          onChange={setTeacher}
+          placeholder="Chọn giáo viên"
+          options={dataUser.map(e => ({ label: e.first_name + " " + e.last_name, value: e.id_user }))}
+        />
       </div>
       {/* 4 */}
       <h4 className="font-bold">4.	Tài liệu học tập</h4>
@@ -338,6 +553,7 @@ export function CoursesEdit() {
           className="flex-1"
           value={des}
           onChange={setDes}
+          placeholder="Nhập tài liệu học tập"
         />
       </div>
 
@@ -347,27 +563,57 @@ export function CoursesEdit() {
       <div className="mb-3">
         <ReactQuill
           className="flex-1"
-          value={des}
-          onChange={setDes}
+          value={infoDes1}
+          onChange={setInfoDes1}
+          placeholder="Nhập mục tiêu học phần"
         />
       </div>
       <p>b.	Mô tả vắn tắt học phần</p>
       <div className="mb-3">
         <ReactQuill
           className="flex-1"
-          value={des}
-          onChange={setDes}
+          value={infoDes2}
+          onChange={setInfoDes2}
+          placeholder="Nhập mô tả vắn tắt học phần"
         />
       </div>
       <p>c.	Học phần học trước (A), tiên quyết (B), song hành (C)</p>
-      <div className="mb-5 bg-[#cccc]">
-        Làm ô search để chọn select cho nhiều cái
+      <div className="mb-5">
+        {/* <p className="my-2">Chọn môn học trước</p>
+        <Select
+            mode="multiple"
+            value={teacher}
+            style={{ width: '100%' }}
+            onChange={setSubject_similar}
+            placeholder="Chọn môn học trước"
+            options={dataCourse.map(e => ({ label: e.title?.split("<p>")[1]?.split("</p>")[0] || e.name , value: e.id_course_main }))}
+          /> */}
+
+        <p className="my-2">Chọn môn tiên quyết</p>
+        <Select
+          mode="multiple"
+          value={subject_pre}
+          style={{ width: '100%' }}
+          onChange={setSubject_pre}
+          placeholder="Chọn môn học trước"
+          options={dataCourse.map(e => ({ label: e.title?.split("<p>")[1]?.split("</p>")[0] || e.name , value: e.id_course_main }))}
+        />
+
+        <p className="my-2">Chọn môn song hành</p>
+        <Select
+          mode="multiple"
+          value={subject_similar}
+          style={{ width: '100%' }}
+          onChange={setSubject_similar}
+          placeholder="Chọn môn học trước"
+          options={dataCourse.map(e => ({ label: e.title?.split("<p>")[1]?.split("</p>")[0] || e.name , value: e.id_course_main }))}
+        />
       </div>
 
       {/* 6 */}
       <h4 className="font-bold">6.	Chuẩn đầu ra của học phần</h4>
       <p>Khi hoàn thành học phần, người học có khả năng: </p>
-      <table className="w-full text-sm ">
+      <table className="w-full text-sm mb-8 ">
         <thead>
           <tr>
             <th
@@ -387,13 +633,13 @@ export function CoursesEdit() {
               scope="col "
               className="border border-gray-400 "
             >
-              SO/PI
+              PLO
             </th>
             <th className="border-none"></th>
           </tr>
         </thead>
         <tbody className="text-sm ">
-          {tableRowCDR.map((item, i) => {
+          {tableRowCLOs1?.map((item, i) => {
             return (
               <tr
                 key={`row-${item.id}`}
@@ -409,8 +655,9 @@ export function CoursesEdit() {
                 <td className=" border pt-2 relative w-[800px] border-gray-400  ">
                   <textarea
                     className="w-full break-all"
+                    defaultValue={item.value.content}
                     onChange={(e) =>
-                      handleTableRowsCDR(
+                      handleTableRowsCLOs1(
                         i,
                         'content',
                         e.target
@@ -424,10 +671,12 @@ export function CoursesEdit() {
                   <textarea
                     rows="auto"
                     cols="auto"
+                    className="w-full break-all"
+                    defaultValue={item.value.PLO}
                     onChange={(e) =>
-                      handleTableRowsCDR(
+                      handleTableRowsCLOs1(
                         i,
-                        'soPerPi',
+                        'PLO',
                         e.target
                           .value
                       )
@@ -440,7 +689,7 @@ export function CoursesEdit() {
                     <button
                       className="w-6 h-6 text-center text-green-600 border border-green-600 rounded-lg "
                       onClick={
-                        addTableRowCDR
+                        addTableRowCLOs1
                       }
                     >
                       +
@@ -449,7 +698,7 @@ export function CoursesEdit() {
                     <button
                       className="w-6 h-6 text-center text-red-600 border border-red-600 rounded-lg "
                       onClick={() =>
-                        deleteTableRowsCDR(
+                        deleteTableRowsCLOs1(
                           i
                         )
                       }
@@ -463,7 +712,118 @@ export function CoursesEdit() {
           })}
         </tbody>
       </table>
-      <p>Ma trận tích hợp giữa chuẩn đầu ra của học phần và chuẩn đầu ra của chương trình đào tạo. </p>
+      <p className="mb-2">Ma trận tích hợp giữa chuẩn đầu ra của học phần và chuẩn đầu ra của chương trình đào tạo. </p>
+      <div className="mb-5">
+        <table className="w-full text-sm ">
+          <thead>
+            <tr>
+              <th
+                className="border border-gray-400 "
+              >
+                CLOs
+              </th>
+              <th
+                className="border border-gray-400 "
+              >
+                a
+              </th>
+              <th
+                className="border border-gray-400 "
+              >
+                b
+              </th>
+              <th
+                className="border border-gray-400 "
+              >
+                c
+              </th>
+              <th
+                className="border border-gray-400 "
+              >
+                d
+              </th>
+              <th
+                className="border border-gray-400 "
+              >
+                e
+              </th>
+              <th
+                className="border border-gray-400 "
+              >
+                f
+              </th>
+              <th
+                className="border border-gray-400 "
+              >
+                g
+              </th>
+            </tr>
+          </thead>
+          <tbody className="text-sm">
+            {tableRowCLOs2?.map((item, i) => {
+              return (
+                <tr
+                  key={`row-${item.id}`}
+                  id={i}
+                  className={item.className}
+                >
+                  <td
+                    scope="row"
+                    className="w-10 font-medium text-center border border-gray-400 "
+                  >
+                    {i + 1}
+                  </td>
+                  <td className="relative break-all border border-gray-400">
+                    <input type="text" className="w-full border-b-2 focus:outline-none" value={item.value.a}  onChange={(e) => handleTableRowsCLOs2(i, 'a', e.target.value)} />
+                  </td>
+                  <td className="relative  p-2 break-all border border-gray-400">
+                    <input type="text" className="w-full border-b-2 focus:outline-none" value={item.value.b}  onChange={(e) => handleTableRowsCLOs2(i, 'b', e.target.value)} />
+                  </td>
+                  <td className="relative p-2 break-all border border-gray-400">
+                    <input type="text" className="w-full border-b-2 focus:outline-none" value={item.value.c}  onChange={(e) => handleTableRowsCLOs2(i, 'c', e.target.value)} />
+                  </td>
+                  <td className="relative  p-2 break-all border border-gray-400">
+                    <input type="text" className="w-full border-b-2 focus:outline-none" value={item.value.d}  onChange={(e) => handleTableRowsCLOs2(i, 'd', e.target.value)} />
+                  </td>
+                  <td className="p-2 break-all border border-gray-400">
+                    <input type="text" className="w-full border-b-2 focus:outline-none" value={item.value.e}  onChange={(e) => handleTableRowsCLOs2(i, 'e', e.target.value)} />
+                  </td>
+                  <td className="p-2 break-all border border-gray-400">
+                    <input type="text" className="w-full border-b-2 focus:outline-none" value={item.value.f}  onChange={(e) => handleTableRowsCLOs2(i, 'f', e.target.value)} />
+                  </td>
+                  <td className="p-2 break-all border border-gray-400">
+                    <input type="text" className="w-full border-b-2 focus:outline-none" value={item.value.g}  onChange={(e) => handleTableRowsCLOs2(i, 'g', e.target.value)} />
+                  </td>
+                  <td className="w-10 pl-4">
+                    {item.id === 0 ? (
+                      <button
+                        className="w-6 h-6 text-center text-green-600 border border-green-600 rounded-lg "
+                        onClick={
+                          addTableRowCLOs2
+                        }
+                      >
+                        +
+                      </button>
+                    ) : (
+                      <button
+                        className="w-6 h-6 text-center text-red-600 border border-red-600 rounded-lg "
+                        onClick={() =>
+                          deleteTableRowsCLOs2(
+                            i
+                          )
+                        }
+                      >
+                        -
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
 
       {/* 7 */}
       <h4 className="font-bold">7.	Nội dung học phần và kế hoạch giảng dạy</h4>
@@ -511,7 +871,7 @@ export function CoursesEdit() {
             </tr>
           </thead>
           <tbody className="text-sm ">
-            {tableRowKHGD.map((item, i) => {
+            {tableRowContent?.map((item, i) => {
               return (
                 <tr
                   id={i}
@@ -527,6 +887,7 @@ export function CoursesEdit() {
                   <td className="relative break-all border border-gray-400 w-96">
                     <ReactQuill
                       theme="snow"
+                      value={item.value.content}
                       onChange={(e) =>
                         handleTableRowsKHGD(
                           i,
@@ -540,12 +901,12 @@ export function CoursesEdit() {
                     <input
                       type="number"
                       min={0}
-                      defaultValue={0}
+                      defaultValue={item.value.number_session}
                       className="w-10 text-center border-b-2 focus:outline-none"
                       onChange={(e) =>
                         handleTableRowsKHGD(
                           i,
-                          'nLessons',
+                          'number_session',
                           e.target
                             .value
                         )
@@ -556,10 +917,11 @@ export function CoursesEdit() {
                     <input
                       type="text"
                       className="w-full border-b-2 focus:outline-none"
+                      defaultValue={item.value.CLOs}
                       onChange={(e) =>
                         handleTableRowsKHGD(
                           i,
-                          'clos',
+                          'CLOs',
                           e.target
                             .value
                         )
@@ -570,6 +932,7 @@ export function CoursesEdit() {
                     <input
                       type="text"
                       className="w-full border-b-2 focus:outline-none"
+                      defaultValue={item.value.method}
                       onChange={(e) =>
                         handleTableRowsKHGD(
                           i,
@@ -582,11 +945,12 @@ export function CoursesEdit() {
                   </td>
                   <td className="p-2 break-all border border-gray-400 w-72">
                     <ReactQuill
+                      defaultValue={item.value.self_study}
                       theme="snow"
                       onChange={(e) =>
                         handleTableRowsKHGD(
                           i,
-                          'bonus',
+                          'self_study',
                           e
                         )
                       }
@@ -597,7 +961,7 @@ export function CoursesEdit() {
                       <button
                         className="w-6 h-6 text-center text-green-600 border border-green-600 rounded-lg "
                         onClick={
-                          addTableRowKHGD
+                          addTableRowContent
                         }
                       >
                         +
@@ -662,7 +1026,7 @@ export function CoursesEdit() {
             </tr>
           </thead>
           <tbody className="text-sm ">
-            {tableRowPPDG.map((item, i) => {
+            {tableRowCLOs3?.map((item, i) => {
               return (
                 <tr
                   key={`row-${item.id}`}
@@ -673,14 +1037,13 @@ export function CoursesEdit() {
                     scope="row"
                     className="w-10 p-2 font-medium border border-gray-400"
                   >
-                    <input
+                    {/* <input
                       type="number"
                       className="w-full text-center border-b-2 focus:outline-none"
                       min={0}
                       defaultValue={0}
                       onChange={(e) => {
-                        // console.log(item.id);
-                        handleTableRowsPPDG(
+                        handleTableRowsCLOs2(
                           i,
                           'clo',
                           Number(
@@ -689,16 +1052,18 @@ export function CoursesEdit() {
                           )
                         );
                       }}
-                    />
+                    /> */}
+                    {i + 1}
                   </th>
                   <td className="relative p-2 break-all border border-gray-400 w-96">
                     <input
                       type="text"
                       className="w-full border-b-2 focus:outline-none"
+                      defaultValue={item.value.exam}
                       onChange={(e) =>
-                        handleTableRowsPPDG(
+                        handleTableRowsCLOs3(
                           i,
-                          'test',
+                          'exam',
                           e.target
                             .value
                         )
@@ -709,8 +1074,9 @@ export function CoursesEdit() {
                     <input
                       type="text"
                       className="w-full border-b-2 focus:outline-none"
+                      defaultValue={item.value.method}
                       onChange={(e) =>
-                        handleTableRowsPPDG(
+                        handleTableRowsCLOs3(
                           i,
                           'method',
                           e.target
@@ -724,15 +1090,13 @@ export function CoursesEdit() {
                       type="number"
                       className="w-full border-b-2 focus:outline-none"
                       min={0}
-                      defaultValue={0}
+                      defaultValue={item.value.point}
                       onChange={(e) =>
-                        handleTableRowsPPDG(
+                        handleTableRowsCLOs3(
                           i,
-                          'proportion',
-                          Number(
-                            e.target
-                              .value
-                          )
+                          'point',
+                          e.target
+                            .value
                         )
                       }
                     />
@@ -742,15 +1106,13 @@ export function CoursesEdit() {
                       type="number"
                       className="w-full border-b-2 focus:outline-none"
                       min={0}
-                      defaultValue={0}
+                      defaultValue={item.value.criteria}
                       onChange={(e) =>
-                        handleTableRowsPPDG(
+                        handleTableRowsCLOs3(
                           i,
-                          'target',
-                          Number(
-                            e.target
-                              .value
-                          )
+                          'criteria',
+                          e.target
+                            .value
                         )
                       }
                     />
@@ -760,7 +1122,7 @@ export function CoursesEdit() {
                       <button
                         className="w-6 h-6 text-center text-green-600 border border-green-600 rounded-lg "
                         onClick={
-                          addTableRowPPDG
+                          addTableRowCLOs3
                         }
                       >
                         +
@@ -769,14 +1131,9 @@ export function CoursesEdit() {
                       <button
                         className="w-6 h-6 text-center text-red-600 border border-red-600 rounded-lg "
                         onClick={() => {
-                          console.log(
-                            'Dong thu',
+                          deleteTableRowsCLOs3(
                             i
                           );
-                          deleteTableRowsPPDG(
-                            i
-                          );
-                          // console.log(tableRowPPDG);
                         }}
                       >
                         -
@@ -817,7 +1174,7 @@ export function CoursesEdit() {
             </tr>
           </thead>
           <tbody className="text-sm">
-            {tableRowTPDG.map((item, i) => {
+            {tableRowTPDG?.map((item, i) => {
               return (
                 <tr
                   id={i}
@@ -905,22 +1262,36 @@ export function CoursesEdit() {
       {/* 10 */}
       <h4 className="font-bold">Ngày biên soạn</h4>
       <div className="mb-5">
-        <input type="date" />
+        <input type="date" value={timeUpdate} onChange={e => setTimeUpdate(e.target.value)}/>
       </div>
 
       {/* 11 */}
       <h4 className="font-bold">Trưởng bộ môn: </h4>
       <div className="mb-5">
-        <div className="mb-5 bg-[#cccc]">
-          Làm ô search để chọn select cho nhiều cái
+        <div className="mb-5">
+          <Select
+            mode="multiple"
+            value={primaryTeacher}
+            style={{ width: '100%' }}
+            onChange={setPrimaryTeacher}
+            placeholder="Chọn giáo viên"
+            options={dataUser?.map(e => ({ label: e.first_name + " " + e.last_name, value: e.id_user }))}
+          />
         </div>
       </div>
 
       {/* 12 */}
       <h4 className="font-bold">Trưởng/phó khoa phụ trách:</h4>
       <div className="mb-5">
-        <div className="mb-5 bg-[#cccc]">
-          Làm ô search để chọn select cho nhiều cái
+        <div className="mb-5">
+          <Select
+            mode="multiple"
+            value={headDepartment}
+            style={{ width: '100%' }}
+            onChange={setHeadDepartment}
+            placeholder="Chọn giáo viên"
+            options={dataUser.map(e => ({ label: e.first_name + " " + e.last_name, value: e.id_user }))}
+          />
         </div>
       </div>
 
@@ -930,18 +1301,17 @@ export function CoursesEdit() {
 
       <div className="flex justify-center mt-10 border-t-2 gap-10">
         <button
-          className="bg-blue-500 text-white font-bold py-2 px-4 rounded mt-4"
+          className="bg-green-500 text-white font-bold py-2 px-4 rounded mt-4"
           onClick={handleSave}
         >
-          Lưu
+          Sửa
         </button>
-        <button
+        {/* <button
           className="bg-blue-500 text-white font-bold py-2 px-4 rounded mt-4"
           onClick={handleSave}
         >
           Xuất file
-        </button>
-
+        </button> */}
       </div>
     </div>
   );

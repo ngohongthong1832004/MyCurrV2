@@ -18,6 +18,7 @@ import { Link } from "react-router-dom";
 import { getCourse, getUser } from "@/api/getDataAPI";
 import { Dialog, DialogHeader, DialogBody, CardFooter, DialogFooter, Button } from "@material-tailwind/react";
 import { Input, Checkbox } from "@material-tailwind/react";
+import { DeleteCourse } from "@/api/deleteAPI";
 
 
 export function Courses() {
@@ -49,6 +50,13 @@ export function Courses() {
     }
     getData();
   }, []);
+
+
+  const handleDeleteCourse = async (id) => {
+    // console.log(id);
+    const res = await DeleteCourse(id);
+  }
+
 
 
 
@@ -254,12 +262,12 @@ export function Courses() {
                           </MenuHandler>
                           <MenuList>
                             <MenuItem>
-                              <Link
+                              {/* <Link
                                 to={"/dashboard" + PATH_EDIT_COURSE}
                                 className="text-xs font-semibold text-blue-gray-600 bg-blue-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
                               >
                                 Xuất file word
-                              </Link>
+                              </Link> */}
                             </MenuItem>
                             <MenuItem>
                               <Link
@@ -272,6 +280,7 @@ export function Courses() {
                             <MenuItem>
                               <Link
                                 to={'#'}
+                                onClick={() => handleDeleteCourse(id_course_main)}
                                 className="text-xs font-semibold text-blue-gray-600 bg-red-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
                               >
                                 Xóa

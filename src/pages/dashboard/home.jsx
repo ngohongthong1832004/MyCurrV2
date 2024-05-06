@@ -98,7 +98,7 @@ export function Home() {
   
 
   const handleDeleteCourse = async (id) => {
-    console.log(id);
+    // console.log(id);
     const res = await DeleteCourse(id);
   }
 
@@ -233,12 +233,12 @@ export function Home() {
                             </MenuHandler>
                             <MenuList>
                               <MenuItem>
-                                <Link
+                                {/* <Link
                                   to={"/dashboard" + PATH_EDIT_COURSE}
                                   className="text-xs font-semibold text-blue-gray-600 bg-blue-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
                                 >
                                   Xuất file word
-                                </Link>
+                                </Link> */}
                               </MenuItem>
                               <MenuItem>
                                 <Link
@@ -445,12 +445,12 @@ export function Home() {
                             </MenuHandler>
                             <MenuList>
                               <MenuItem>
-                                <Link
+                                {/* <Link
                                   to={"/dashboard" + PATH_EDIT_CURRICULUM}
                                   className="text-xs font-semibold text-blue-gray-600 bg-blue-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
                                 >
                                   Xuất file word
-                                </Link>
+                                </Link> */}
                               </MenuItem>
                               <MenuItem>
                                 <Link
