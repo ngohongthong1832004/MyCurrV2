@@ -145,11 +145,11 @@ export function Courses() {
                     </Button>
                   </DialogFooter>
                 </Dialog>
-                <Button variant="gradient">
-                  <Link to={"/dashboard" + PATH_ADD_COURSE}>
-                    <span>Thêm mới</span>
-                  </Link>
-                </Button>
+                <Link to={"/dashboard" + PATH_ADD_COURSE}>
+                  <Button variant="gradient">
+                      <span>Thêm mới</span>
+                  </Button>
+                </Link>
                 <Button variant="gradient" onClick={handleOpen} className="!bg-blue-500">
                   <span>Hủy</span>
                 </Button>

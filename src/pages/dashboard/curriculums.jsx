@@ -120,7 +120,7 @@ export function Curriculums() {
                                 </td>
                                 <td className={className}>
                                   <Link 
-                                    to={"/dashboard" + PATH_ADD_CURRICULUM + "/" + id_curriculum}
+                                    to={"/dashboard" + PATH_EDIT_CURRICULUM + "/" + id_curriculum}
                                     className="text-xs font-semibold text-blue-gray-600 bg-green-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
                                   >
                                     Chọn
@@ -139,11 +139,11 @@ export function Curriculums() {
                     </Button>
                   </DialogFooter>
                 </Dialog>
-                <Button variant="gradient">
-                  <Link to={"/dashboard" + PATH_ADD_CURRICULUM}>
-                    <span>Thêm mới</span>
-                  </Link>
-                </Button>
+                <Link to={"/dashboard" + PATH_ADD_CURRICULUM}>
+                  <Button variant="gradient">
+                      <span>Thêm mới</span>
+                  </Button>
+                </Link>
                 <Button variant="gradient" onClick={handleOpen} className="!bg-blue-500">
                   <span>Hủy</span>
                 </Button>

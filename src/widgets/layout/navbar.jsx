@@ -65,7 +65,7 @@ export function Navbar({ brandName, routes, action }) {
           className="ml-auto text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden"
           onClick={() => setOpenNav(!openNav)}
         >
-          {openNav ? (
+          {true ? (
             <XMarkIcon strokeWidth={2} className="h-6 w-6" />
           ) : (
             <Bars3Icon strokeWidth={2} className="h-6 w-6" />

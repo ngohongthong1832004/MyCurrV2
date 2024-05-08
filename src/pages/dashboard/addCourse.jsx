@@ -326,6 +326,8 @@ export function CoursesAdd() {
   const [headDepartment, setHeadDepartment] = useState([]);
 
 
+  console.log(subject_similar);
+
 
   const handleSave = () => {
 
@@ -493,7 +495,7 @@ export function CoursesAdd() {
           style={{ width: '100%' }}
           onChange={setSubject_pre}
           placeholder="Chọn môn học trước"
-          options={dataCourse.map(e => ({ label: e.title?.split("<p>")[1]?.split("</p>")[0] || e.name , value: e.id_course_main }))}
+          options={dataCourse.map(e => ({ label: e.title?.split("<p>")[1]?.split("</p>")[0] || e.name , value: e.name }))}
         />
 
         <p className="my-2">Chọn môn song hành</p>
@@ -503,7 +505,7 @@ export function CoursesAdd() {
           style={{ width: '100%' }}
           onChange={setSubject_similar}
           placeholder="Chọn môn học trước"
-          options={dataCourse.map(e => ({ label: e.title?.split("<p>")[1]?.split("</p>")[0] || e.name , value: e.id_course_main }))}
+          options={dataCourse.map(e => ({ label: e.title?.split("<p>")[1]?.split("</p>")[0] || e.name , value: e.name }))}
         />
       </div>
 

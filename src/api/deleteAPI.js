@@ -1,8 +1,6 @@
-import axios from "axios";
-
-import { BASE_URL } from "./axiosClient";
+import axiosClient from "./axiosClient";
 
 export const DeleteCourse = async(id) => {
-    const response = await axios.delete(`${BASE_URL}/courses/${id}`);
+    const response = await axiosClient.delete(`/courses/${id}`);
     return response.data;
 }

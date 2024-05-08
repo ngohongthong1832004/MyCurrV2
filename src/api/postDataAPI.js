@@ -1,7 +1,6 @@
-import axios from 'axios';
-import { BASE_URL } from './axiosClient';
+import axiosClient from './axiosClient';
 
 export const CreateCourse = async(data) => {
-    const response = await axios.post(`${BASE_URL}/courses/`, data);
+    const response = await axiosClient.post(`/courses/`, data);
     return response.data;
 }

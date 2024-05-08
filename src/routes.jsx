@@ -21,6 +21,7 @@ import {
   PATH_ADD_CURRICULUM ,
 } from '@/path'
 import CoursesAdd from "./pages/dashboard/addCourse";
+import CurriculumsAdd from "./pages/dashboard/addCurriculum";
 
 const icon = {
   className: "w-5 h-5 text-inherit",
@@ -66,7 +67,7 @@ export const routes = [
   {
     title: "auth pages",
     layout: "auth",
-    show: true,
+    show: false,
     pages: [
       {
         icon: <UserCircleIcon {...icon} />,
@@ -91,7 +92,7 @@ export const routes = [
         icon: <HomeIcon {...icon} />,
         name: "addCurriculum",
         path:   PATH_ADD_CURRICULUM,
-        element: <CurriculumsEdit />,
+        element: <CurriculumsAdd />,
       },
       {
         icon: <HomeIcon {...icon} />,

@@ -25,12 +25,25 @@ import {
   setOpenConfigurator,
   setOpenSidenav,
 } from "@/context";
+import { PATH_PROFILE } from "@/path";
 
 export function DashboardNavbar() {
   const [controller, dispatch] = useMaterialTailwindController();
   const { fixedNavbar, openSidenav } = controller;
   const { pathname } = useLocation();
   const [layout, page] = pathname.split("/").filter((el) => el !== "");
+
+  const user = JSON.parse(localStorage.getItem("user"));
+  console.log(user);
+
+
+  const handleLogOut = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.reload();
+  }
+
+
 
   return (
     <Navbar
@@ -80,7 +93,7 @@ export function DashboardNavbar() {
           >
             <Bars3Icon strokeWidth={3} className="h-6 w-6 text-blue-gray-500" />
           </IconButton>
-          <Link to="/auth/sign-in">
+          { !user ? <Link to="/auth/sign-in">
             <Button
               variant="text"
               color="blue-gray"
@@ -96,7 +109,38 @@ export function DashboardNavbar() {
             >
               <UserCircleIcon className="h-5 w-5 text-blue-gray-500" />
             </IconButton>
-          </Link>
+          </Link> : 
+            // menu
+            <Menu>
+              <MenuHandler>
+                <Button
+                variant="text"
+                color="blue-gray"
+                className="hidden items-center gap-1 px-4 xl:flex normal-case"
+              >
+                <UserCircleIcon className="h-5 w-5 text-blue-gray-500" />
+                  {user.first_name} {user.last_name}
+              </Button>
+              </MenuHandler>
+              <MenuList>
+                <MenuItem
+                  icon={<UserCircleIcon className="h-5 w-5" />}
+                  color="blue-gray"
+                  ripple="light"
+                >
+                  <Link to={"/dashboard"+PATH_PROFILE}>Profile</Link>
+                </MenuItem>
+                <MenuItem
+                  icon={<CreditCardIcon className="h-5 w-5" />}
+                  color="blue-gray"
+                  ripple="light"
+                  onClick={handleLogOut}
+                >
+                  Đăng xuất
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          }
         </div>
       </div>
     </Navbar>

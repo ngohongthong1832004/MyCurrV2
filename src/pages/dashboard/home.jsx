@@ -305,7 +305,7 @@ export function Home() {
               </thead>
               <tbody>
                 {dataUser.map(
-                  ({ first_name, last_name, id_user, education, department, gmail }, key) => {
+                  ({ first_name, last_name, id_user, education, department, email }, key) => {
                     const className = `py-3 px-5 ${key === dataUser.length - 1
                       ? ""
                       : "border-b border-blue-gray-50"
@@ -338,7 +338,7 @@ export function Home() {
                             color="blue-gray"
                             className="font-bold"
                           >
-                            {gmail}
+                            {email}
                           </Typography>
                         </td>
                       </tr>
