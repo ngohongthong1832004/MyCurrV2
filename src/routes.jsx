@@ -18,7 +18,8 @@ import {
   PATH_EDIT_COURSE,
   PATH_EDIT_CURRICULUM,
   PATH_ADD_COURSE,
-  PATH_ADD_CURRICULUM ,
+  PATH_ADD_CURRICULUM, 
+  PATH_SIGN_UP,
 } from '@/path'
 import CoursesAdd from "./pages/dashboard/addCourse";
 import CurriculumsAdd from "./pages/dashboard/addCurriculum";
@@ -72,7 +73,7 @@ export const routes = [
       {
         icon: <UserCircleIcon {...icon} />,
         name: "sign in",
-        path: "/sign-in",
+        path: PATH_SIGN_UP,
         element: <SignIn />,
       },
     ],

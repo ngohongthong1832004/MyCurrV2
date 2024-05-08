@@ -20,6 +20,8 @@ import ReactQuill from "react-quill"
 import 'react-quill/dist/quill.snow.css'
 import { getCourse, getCurriculum, getUser } from "@/api/getDataAPI";
 import { Select } from "antd";
+import { CreateCurriculum, CreateCurriculumCourse } from "@/api/postDataAPI";
+import { number } from "prop-types";
 
 
 export function CurriculumsAdd() {
@@ -53,10 +55,6 @@ export function CurriculumsAdd() {
     };
     fetchData();
   }, []);
-
-
-
-
 
   const [title, setTitle] = useState("Nhập tên học phần");
   const [courseId, setCourseId] = useState("Nhập mã học phần");
@@ -93,14 +91,14 @@ export function CurriculumsAdd() {
     },
   ];
 
-  const [semesters, setSemesters] = useState(semester);
+  const [listSemesters, setSemesters] = useState(semester);
   const addSemester = () => {
     setSemesters((r) => {
       let idx = r[r.length - 1].id + 1;
       return [
         ...r,
         {
-          id: r.length + 1,
+          id: r.length,
           name: `Học kỳ ${r.length + 1}`,
           value: [
             {
@@ -125,7 +123,7 @@ export function CurriculumsAdd() {
     });
   };
   const deleteSemester = (index) => {
-    const rows = [...semesters];
+    const rows = [...listSemesters];
     rows.splice(index, 1);
     setSemesters(rows);
   };
@@ -136,6 +134,48 @@ export function CurriculumsAdd() {
       return rows;
     });
   }
+
+  const handleSave = async() => {
+
+    const listCurrCourseTrue = listSemesters.map((item) => {
+      return {
+        id_curriculumCourse: (nameCurriculum+ " " + item.name + "_" + Number(item.value[0].mandatory) ).replace(/\s/g, "_"),
+        mandatory: item.value[0].mandatory,
+        is_confirm: false,
+        semester: item.id,
+        teacher_ids: primaryTeacher,
+        course_ids: item.value[0].course_ids
+      }
+    }).flat();
+
+    const listCurrCourseFalse = listSemesters.map((item) => {
+      return {
+        id_curriculumCourse: (nameCurriculum+ " " + item.name + "_" + Number(item.value[1].mandatory) ).replace(/\s/g, "_"),
+        mandatory: item.value[1].mandatory,
+        is_confirm: false,
+        semester: item.id,
+        teacher_ids: primaryTeacher,
+        course_ids: item.value[1].course_ids
+      }
+    }).flat();
+
+    const dataCurriculum = {
+      id_curriculum: (nameCurriculum + "_" + listSemesters.length).replace(/\s/g, "_"),
+      name: nameCurriculum,
+      year: date,
+      curriculum_course_data: [
+        ...listCurrCourseTrue,
+        ...listCurrCourseFalse
+      ],
+      department: department,
+      note: note,
+    }
+
+    const data = await CreateCurriculum(dataCurriculum);
+    console.log(dataCurriculum);
+    // setIsEdit(true);
+  }
+
 
   return (
     <div className="mt-8 mb-8 gap-12 bg-white min-h-[100vh] border border-blue-gray-100 shadow-sm rounded-xl p-4">
@@ -257,7 +297,7 @@ export function CurriculumsAdd() {
         </table>
 
         <table className="text-sm mt-2 w-full">
-          {semesters.map((item, index) => {
+          {listSemesters.map((item, index) => {
             return (
               <tr
                 key={`row-${item.id}`}
@@ -616,7 +656,7 @@ export function CurriculumsAdd() {
         <div className="flex justify-center mt-10 border-t-2 gap-10">
           <button
             className="bg-blue-500 text-white font-bold py-2 px-4 rounded mt-4"
-          // onClick={handleSave}
+            onClick={handleSave}
           >
             Lưu
           </button>

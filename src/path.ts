@@ -1,3 +1,5 @@
+export const PATH_SIGN_UP = "/sign-in"
+
 export const PATH_HOME = '/home';
 export const PATH_PROFILE = '/profile';
 export const PATH_TEACHER = '/teacher';
