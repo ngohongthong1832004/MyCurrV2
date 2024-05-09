@@ -24,10 +24,11 @@ import { CreateCourse } from "@/api/postDataAPI";
 import { Select } from 'antd';
 import { getCourse, getCourseById, getUser } from "@/api/getDataAPI";
 import { putCourse } from "@/api/putDataAPI";
+import { useLocation } from "react-router-dom";
 
 
 export function CoursesEdit() {
-
+  let {state } = useLocation();
   const [dataUser, setDataUser] = useState([]);
   const [dataCourse, setDataCourse] = useState([]);
   const [initialCourse, setInitialCourse] = useState({});
@@ -35,9 +36,6 @@ export function CoursesEdit() {
   const lastParam = url.split("/").pop();
 
   useEffect(() => {
-    
-    
-
     const fetchData = async () => {
       const dataUser = await getUser();
       setDataUser(dataUser);
@@ -63,11 +61,11 @@ export function CoursesEdit() {
   // 1
   const [title, setTitle] = useState(initialCourse.title);
 
-  console.log(title);
+  // console.log(title);
   const [courseId, setCourseId] = useState("");
   const [idCourse, setIdCourse] = useState("")
 
-  console.log(courseId);
+  // console.log(courseId);
 
   const handleChangeId = (content, delta, source, editor) => {
     setCourseId(content);
@@ -288,21 +286,21 @@ export function CoursesEdit() {
     });
   };
 
-  const rowTPDG = [
+  const rowCLOs4 = [
     {
       id: 0,
       value: {
         order: 1,
-        name: '',
+        exam: '',
         method: '',
-        proportion: 0,
+        criteria: 0,
       },
       className: '',
     },
   ];
-  const [tableRowTPDG, setTableRowTPDG] = useState(rowTPDG);
-  const addTableRowTPDG = () => {
-    setTableRowTPDG((r) => {
+  const [tableRowCLOs4, setTableRowCLOs4] = useState(rowCLOs4);
+  const addTableRowCLOs4 = () => {
+    setTableRowCLOs4((r) => {
       let idx = r[r.length - 1].id + 1;
       return [
         ...r,
@@ -310,23 +308,23 @@ export function CoursesEdit() {
           id: idx,
           value: {
             order: idx,
-            name: '',
+            exam: '',
             method: '',
-            proportion: 0,
+            criteria: 0,
           },
           className: '',
         },
       ];
     });
   };
-  const deleteTableRowsTPDG = (index) => {
-    const rows = [...tableRowTPDG];
+  const deleteTableRowsCLOs4 = (index) => {
+    const rows = [...tableRowCLOs4];
     rows.splice(index, 1);
-    setTableRowTPDG(rows);
+    setTableRowCLOs4(rows);
   };
 
-  const handleTableRowsTPDG = (index, key, value) => {
-    setTableRowTPDG((prev) => {
+  const handleTableRowsCLOs4 = (index, key, value) => {
+    setTableRowCLOs4((prev) => {
       prev[index].value[key] = value;
       return prev;
     });
@@ -337,7 +335,7 @@ export function CoursesEdit() {
 
   // time update
   const [timeUpdate, setTimeUpdate] = useState(new Date().toISOString().split("T")[0]);
-  console.log(timeUpdate);
+  // console.log(timeUpdate);
   
 
   // primary teacher
@@ -348,10 +346,10 @@ export function CoursesEdit() {
 
 
 
-  const handleSave = () => {
-
+  const handleSave = async () => {
+    console.log(state, "state")
     const param = {
-      id_course_main: idCourse.replace(/\s/g, ''),
+      id_course_main: (idCourse + String(state)).replace(/\s/g, ''),
       name: title,
       title: title,
       number_credit: creditPractical + ', ' + creditTheory + ', ' + creditSelfStudy + ", " + (creditPractical + creditTheory + creditSelfStudy),
@@ -360,26 +358,31 @@ export function CoursesEdit() {
       description: infoDes2,
       subject_similar: subject_similar.map(e => { return { id: e, name: e } }),
       subject_pre: subject_pre.map(e => { return { id: e, name: e } }),
-      CLOs1: tableRowCLOs1.map(e => { return { ...e.value, order  : e.id + 1 } }),
-      CLOs2: tableRowCLOs2.map(e => { return { ...e.value, order  : e.id + 1 } }),
-      CLOs3: tableRowCLOs3.map(e => { return { ...e.value} }),
-      content: tableRowContent.map(e => { return { ...e.value} }),
+      CLOs1: tableRowCLOs1.map(e => { return { ...e.value, order  : e.id + 1, id: e.id }}),
+      CLOs2: tableRowCLOs2.map(e => { return { ...e.value, order  : e.id + 1, id: e.id } }),
+      CLOs3: tableRowCLOs3.map(e => { return { ...e.value, id: e.id} }),
+      CLOs4: tableRowCLOs4.map(e => { return { ...e.value, order  : e.id + 1, id: e.id } }),
+      content: tableRowContent.map(e => { return { ...e.value, id: e.id} }),
       time_update: timeUpdate,
       primary_teacher_ids: primaryTeacher,
       head_department_ids: headDepartment,
       teachers_ids: teacher
     }
 
-    const data = putCourse(lastParam,param);
+    if (state){
+      await CreateCourse(param);
+    }else {
+      await putCourse(param);
+    }
 
   }
 
 
-  console.log(tableRowCLOs1, "tableRowCLOs1");
+  // console.log(tableRowCLOs1, "tableRowCLOs1");
 
   useEffect(() => {
 
-    console.log(initialCourse);
+    // console.log(initialCourse);
 
     if (initialCourse) {
       setTitle(initialCourse.title);
@@ -395,7 +398,7 @@ export function CoursesEdit() {
       setTableRowCLOs1(initialCourse.CLOs1?.map((e, i) => {
         return {
           className: '',
-          id: i,
+          id: e.id,
           value: {
             content: e.content,
             PLO: e.PLO
@@ -405,7 +408,7 @@ export function CoursesEdit() {
       setTableRowCLOs2(initialCourse.CLOs2?.map((e, i) => {
         return {
           className: '',
-          id: i,
+          id: e.id,
           value: {
             a: e.a,
             b: e.b,
@@ -421,7 +424,7 @@ export function CoursesEdit() {
       setTableRowCLOs3(initialCourse.CLOs3?.map((e, i) => {
         return {
           className: '',
-          id: i,
+          id: e.id,
           value: {
             order: i + 1,
             exam: e.exam,
@@ -434,7 +437,7 @@ export function CoursesEdit() {
       setTableRowContent(initialCourse.content?.map((e, i) => {
         return {
           className: '',
-          id: i,
+          id: e.id,
           value: {
             order: i + 1,
             content: e.content,
@@ -442,6 +445,18 @@ export function CoursesEdit() {
             CLOs : e.CLOs,
             number_session: e.number_session,
             self_study: e.self_study
+          }
+        }
+      }));
+      setTableRowCLOs4(initialCourse.CLOs4?.map((e, i) => {
+        return {
+          className: '',
+          id: e.id,
+          value: {
+            order: i + 1,
+            name: e.name,
+            method: e.method,
+            criteria: e.criteria
           }
         }
       }));
@@ -1174,7 +1189,7 @@ export function CoursesEdit() {
             </tr>
           </thead>
           <tbody className="text-sm">
-            {tableRowTPDG?.map((item, i) => {
+            {tableRowCLOs4?.map((item, i) => {
               return (
                 <tr
                   id={i}
@@ -1188,10 +1203,11 @@ export function CoursesEdit() {
                     <textarea
                       type="text"
                       className="w-full"
+                      defaultValue={item.value.method}
                       onChange={(e) =>
-                        handleTableRowsTPDG(
+                        handleTableRowsCLOs4(
                           i,
-                          'name',
+                          'method',
                           e.target
                             .value
                         )
@@ -1201,10 +1217,11 @@ export function CoursesEdit() {
                   <td className="relative break-all border border-gray-400 w-[510px] p-2">
                     <ReactQuill
                       theme="snow"
+                      value={item.value.exam}
                       onChange={(e) =>
-                        handleTableRowsTPDG(
+                        handleTableRowsCLOs4(
                           i,
-                          'method',
+                          'exam',
                           e
                         )
                       }
@@ -1215,10 +1232,11 @@ export function CoursesEdit() {
                       type="number"
                       className="w-full border-b-2 focus:outline-none "
                       min={0}
+                      defaultValue={item.value.criteria}
                       onChange={(e) =>
-                        handleTableRowsTPDG(
+                        handleTableRowsCLOs4(
                           i,
-                          'proportion',
+                          'criteria',
                           Number(
                             e.target
                               .value
@@ -1233,7 +1251,7 @@ export function CoursesEdit() {
                       <button
                         className="w-6 h-6 text-center text-green-600 border border-green-600 rounded-lg "
                         onClick={
-                          addTableRowTPDG
+                          addTableRowCLOs4
                         }
                       >
                         +
@@ -1242,7 +1260,7 @@ export function CoursesEdit() {
                       <button
                         className="w-6 h-6 text-center text-red-600 border border-red-600 rounded-lg "
                         onClick={() =>
-                          deleteTableRowsTPDG(
+                          deleteTableRowsCLOs4(
                             i
                           )
                         }
@@ -1304,7 +1322,7 @@ export function CoursesEdit() {
           className="bg-green-500 text-white font-bold py-2 px-4 rounded mt-4"
           onClick={handleSave}
         >
-          Sửa
+          {state ? "Tạo mới" : "Cập nhật"}
         </button>
         {/* <button
           className="bg-blue-500 text-white font-bold py-2 px-4 rounded mt-4"

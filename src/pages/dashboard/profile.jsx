@@ -18,7 +18,7 @@ export function Profile() {
     const userInfo = JSON.parse(localStorage.getItem("user"));
 
     if (!userInfo) {
-      navigate(PATH_SIGN_UP);
+      navigate("/auth"+PATH_SIGN_UP);
     }
 
     setUser(userInfo);

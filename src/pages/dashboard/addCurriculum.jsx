@@ -35,36 +35,20 @@ export function CurriculumsAdd() {
 
   const [dataUser, setDataUser] = useState([]);
   const [dataCourse, setDataCourse] = useState([]);
-  const [dataCurriculum, setDataCurriculum] = useState([]);
 
 
 
   useEffect(() => {
     const fetchData = async () => {
       const dataUser = await getUser();
-      console.log(dataUser);
+      // console.log(dataUser);
       setDataUser(dataUser);
-
       const dataCourse = await getCourse();
-      console.log(dataCourse);
+      // console.log(dataCourse);
       setDataCourse(dataCourse);
-
-      const dataCurriculum = await getCurriculum();
-      console.log(dataCurriculum);
-      setDataCurriculum(dataCurriculum);
     };
     fetchData();
   }, []);
-
-  const [title, setTitle] = useState("Nhập tên học phần");
-  const [courseId, setCourseId] = useState("Nhập mã học phần");
-
-  const [subject, setSubject] = useState([]);
-
-
-
-
-
 
   const semester = [
     {
@@ -134,9 +118,7 @@ export function CurriculumsAdd() {
       return rows;
     });
   }
-
   const handleSave = async() => {
-
     const listCurrCourseTrue = listSemesters.map((item) => {
       return {
         id_curriculumCourse: (nameCurriculum+ " " + item.name + "_" + Number(item.value[0].mandatory) ).replace(/\s/g, "_"),
@@ -172,8 +154,6 @@ export function CurriculumsAdd() {
     }
 
     const data = await CreateCurriculum(dataCurriculum);
-    console.log(dataCurriculum);
-    // setIsEdit(true);
   }
 
 
@@ -189,7 +169,9 @@ export function CurriculumsAdd() {
         <h2 className="font-bold flex justify-center text-2xl">KẾ HOẠCH ĐẠO TẠO</h2>
         <h4 className="font-bold flex ">TÊN NGÀNH ĐÀO TẠO: {nameCurriculum}</h4>
         <h4 className="font-bold flex ">KHOA: {department}</h4>
-        <h4 className="font-bold flex ">NGÀY TẠO: {date}</h4>
+        <h4 className="font-bold flex ">NGÀY TẠO: { date  ? <p> Ngày {date?.split("-")?.[2]} tháng {date?.split("-")?.[1]} năm {date?.split("-")?.[0]}</p> :
+              <p>Ngày _ tháng _ năm _</p>
+            }</h4>
 
         <table className="w-full text-sm mt-4">
           <thead>
@@ -638,7 +620,10 @@ export function CurriculumsAdd() {
 
         <div className="mt-5 w-[100%] flex justify-end">
           <div className="px-10 items-center flex flex-col">
-            <p>TP. HCM, {date}</p>
+            { date  ? <p>TP. HCM, Ngày {date?.split("-")?.[2]} tháng {date?.split("-")?.[1]} năm {date?.split("-")?.[0]}</p> :
+              <p>TP. HCM, Ngày _ tháng _ năm _</p>
+            }
+            <p className="text-[#000]">Trưởng khoa</p>
             <Select
               mode="multiple"
               value={primaryTeacher}
@@ -647,7 +632,6 @@ export function CurriculumsAdd() {
               placeholder="Chọn giáo viên"
               options={dataUser.map(e => ({ label: e.first_name + " " + e.last_name, value: e.id_user }))}
             />
-            <input type="text" placeholder="Nhập tên trưởng khoa"></input>
           </div>
         </div>
 
@@ -709,7 +693,7 @@ export function CurriculumsAdd() {
                   <label for="category" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Khoa</label>
                   <select
                     onChange={(e) => {
-                      console.log(e.target.value)
+                      // console.log(e.target.value)
                       setDepartment(e.target.value)
                     }}
                     id="category"

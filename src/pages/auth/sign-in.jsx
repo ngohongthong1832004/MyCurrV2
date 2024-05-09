@@ -1,5 +1,6 @@
 import { getUser, loginAPI } from "@/api/axiosClient";
 import { PATH_HOME } from "@/path";
+import { ArrowRightIcon } from "@heroicons/react/24/solid";
 import {
   Card,
   Input,
@@ -82,10 +83,13 @@ export function SignIn() {
             Sign In
           </Button>
 
-          {/* <Typography variant="paragraph" className="text-center text-blue-gray-500 font-medium mt-4">
-            Not registered?
-            <Link to="/auth/sign-up" className="text-gray-900 ml-1">Create account</Link>
-          </Typography> */}
+          <Typography variant="paragraph" className="text-center text-blue-gray-500 font-medium mt-4">
+
+            <Link to={PATH_HOME} className="text-gray-900 ml-2 flex"> Continue without sign in 
+            <span className="w-[30px] h-[30px] ml-2">
+              <ArrowRightIcon width={25} height={25}/>
+            </span> </Link>
+          </Typography>
         </form>
       </div>
       <div className="w-2/5 h-full hidden lg:block">

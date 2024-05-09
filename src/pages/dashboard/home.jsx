@@ -43,15 +43,15 @@ export function Home() {
   useEffect(() => {
     const fetchData = async () => {
       const dataUser = await getUser();
-      console.log(dataUser);
+      // console.log(dataUser);
       setDataUser(dataUser);
 
       const dataCourse = await getCourse();
-      console.log(dataCourse);
+      // console.log(dataCourse);
       setDataCourse(dataCourse);
 
       const dataCurriculum = await getCurriculum();
-      console.log(dataCurriculum);
+      // console.log(dataCurriculum);
       setDataCurriculum(dataCurriculum);
     };
     fetchData();

@@ -19,6 +19,8 @@ import { getCourse, getUser } from "@/api/getDataAPI";
 import { Dialog, DialogHeader, DialogBody, CardFooter, DialogFooter, Button } from "@material-tailwind/react";
 import { Input, Checkbox } from "@material-tailwind/react";
 import { DeleteCourse } from "@/api/deleteAPI";
+import { debounce } from "lodash";
+import { searchCourseAPI } from "@/api/searchDataAPI";
 
 
 export function Courses() {
@@ -38,7 +40,6 @@ export function Courses() {
   useEffect(() => {
     const getData = async () => {
       try {
-
         const dataUser = await getUser();
         setDataUser(dataUser);
 
@@ -56,6 +57,18 @@ export function Courses() {
     // console.log(id);
     const res = await DeleteCourse(id);
   }
+
+
+  const handleSearch = async (e) => {
+    const param =  {
+      search_text : e.target.value
+    }
+
+    const filter = await searchCourseAPI(param);
+    setDataCourses(filter);
+  }
+
+
 
 
 
@@ -127,6 +140,7 @@ export function Courses() {
                                 <td className={className}>
                                   <Link 
                                     to={"/dashboard" + PATH_EDIT_COURSE + "/" + id_course_main}
+                                    state={"clone"}
                                     className="text-xs font-semibold text-blue-gray-600 bg-green-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
                                   >
                                     Chọn
@@ -171,6 +185,7 @@ export function Courses() {
               <Input
                 type="text"
                 outline={true}
+                onChange={debounce(handleSearch, 800)}
                 placeholder="Tìm kiếm"
               />
             </div>

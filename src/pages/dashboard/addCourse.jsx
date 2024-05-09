@@ -13,7 +13,7 @@ import {
 } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
 import { courseData } from "@/data";
-import { PATH_EDIT_COURSE, PATH_ADD_COURSE } from "@/path";
+import { PATH_EDIT_COURSE, PATH_ADD_COURSE, PATH_HOME } from "@/path";
 import { PlusIcon, EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 import { IconButton, Menu, MenuHandler, MenuList, MenuItem } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
@@ -23,10 +23,12 @@ import { MinusIcon } from "@heroicons/react/24/solid";
 import { CreateCourse } from "@/api/postDataAPI";
 import { Select } from 'antd';
 import { getCourse, getUser } from "@/api/getDataAPI";
+import { useNavigate } from "react-router-dom";
 
 
 export function CoursesAdd() {
 
+  const navigate = useNavigate();
   const [dataUser, setDataUser] = useState([]);
   const [dataCourse, setDataCourse] = useState([]);
   const [dataCurriculum, setDataCurriculum] = useState([]);
@@ -38,7 +40,7 @@ export function CoursesAdd() {
       setDataUser(dataUser);
 
       const dataCourse = await getCourse();
-      console.log(dataCourse);
+      // console.log(dataCourse);
       setDataCourse(dataCourse);
 
     };
@@ -54,7 +56,7 @@ export function CoursesAdd() {
   const [courseId, setCourseId] = useState("");
   const [idCourse, setIdCourse] = useState("")
 
-  console.log(courseId);
+  // console.log(courseId);
 
   const handleChangeId = (content, delta, source, editor) => {
     setCourseId(content);
@@ -273,21 +275,21 @@ export function CoursesAdd() {
     });
   };
 
-  const rowTPDG = [
+  const rowCLOs4 = [
     {
       id: 0,
       value: {
         order: 1,
-        name: '',
+        exam: '',
         method: '',
-        proportion: 0,
+        criteria: 0,
       },
       className: '',
     },
   ];
-  const [tableRowTPDG, setTableRowTPDG] = useState(rowTPDG);
-  const addTableRowTPDG = () => {
-    setTableRowTPDG((r) => {
+  const [tableRowCLOs4, setTableRowCLOs4] = useState(rowCLOs4);
+  const addTableRowCLOs4 = () => {
+    setTableRowCLOs4((r) => {
       let idx = r[r.length - 1].id + 1;
       return [
         ...r,
@@ -295,23 +297,23 @@ export function CoursesAdd() {
           id: idx,
           value: {
             order: idx,
-            name: '',
+            exam: '',
             method: '',
-            proportion: 0,
+            criteria: 0,
           },
           className: '',
         },
       ];
-    });
+    });tableRowCLOs4
   };
   const deleteTableRowsTPDG = (index) => {
-    const rows = [...tableRowTPDG];
+    const rows = [...tableRowCLOs4];
     rows.splice(index, 1);
-    setTableRowTPDG(rows);
+    setTableRowCLOs4(rows);
   };
 
-  const handleTableRowsTPDG = (index, key, value) => {
-    setTableRowTPDG((prev) => {
+  const handleTableRowsCLOs4 = (index, key, value) => {
+    setTableRowCLOs4((prev) => {
       prev[index].value[key] = value;
       return prev;
     });
@@ -326,7 +328,7 @@ export function CoursesAdd() {
   const [headDepartment, setHeadDepartment] = useState([]);
 
 
-  console.log(subject_similar);
+  // console.log(subject_similar);
 
 
   const handleSave = () => {
@@ -344,6 +346,7 @@ export function CoursesAdd() {
       CLOs1: tableRowCLOs1.map(e => { return { ...e.value, order  : e.id + 1 } }),
       CLOs2: tableRowCLOs2.map(e => { return { ...e.value, order  : e.id + 1 } }),
       CLOs3: tableRowCLOs3.map(e => { return { ...e.value} }),
+      CLOs4: tableRowCLOs4.map(e => { return { ...e.value, order  : e.id + 1 } }),
       content: tableRowContent.map(e => { return { ...e.value} }),
       time_update: new Date().toISOString(),
       primary_teacher_ids: primaryTeacher,
@@ -352,6 +355,8 @@ export function CoursesAdd() {
     }
 
     const data = CreateCourse(param);
+
+    // navigate(PATH_HOME);
 
   }
 
@@ -1064,7 +1069,7 @@ export function CoursesAdd() {
             </tr>
           </thead>
           <tbody className="text-sm">
-            {tableRowTPDG.map((item, i) => {
+            {tableRowCLOs4.map((item, i) => {
               return (
                 <tr
                   id={i}
@@ -1073,26 +1078,26 @@ export function CoursesAdd() {
                 >
                   <th
                     scope="row"
-                    className="p-2 font-medium border border-gray-400 w-82"
+                    className="p-2 font-medium border border-gray-400 w-82 w-[310px]"
                   >
-                    <textarea
-                      type="text"
+                    <ReactQuill
+                      theme="snow"
                       className="w-full"
                       onChange={(e) =>
-                        handleTableRowsTPDG(
+                        handleTableRowsCLOs4(
                           i,
-                          'name',
+                          'exam',
                           e.target
                             .value
                         )
                       }
-                    ></textarea>
+                    ></ReactQuill>
                   </th>
                   <td className="relative break-all border border-gray-400 w-[510px] p-2">
                     <ReactQuill
                       theme="snow"
                       onChange={(e) =>
-                        handleTableRowsTPDG(
+                        handleTableRowsCLOs4(
                           i,
                           'method',
                           e
@@ -1106,9 +1111,9 @@ export function CoursesAdd() {
                       className="w-full border-b-2 focus:outline-none "
                       min={0}
                       onChange={(e) =>
-                        handleTableRowsTPDG(
+                        handleTableRowsCLOs4(
                           i,
-                          'proportion',
+                          'criteria',
                           Number(
                             e.target
                               .value
@@ -1123,7 +1128,7 @@ export function CoursesAdd() {
                       <button
                         className="w-6 h-6 text-center text-green-600 border border-green-600 rounded-lg "
                         onClick={
-                          addTableRowTPDG
+                          addTableRowCLOs4
                         }
                       >
                         +

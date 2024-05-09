@@ -8,7 +8,6 @@ import {
   Tooltip,
   Progress,
 } from "@material-tailwind/react";
-import { curriculumData, projectsTableData } from "@/data";
 import { PATH_EDIT_CURRICULUM, PATH_ADD_CURRICULUM } from "@/path";
 import { PlusIcon, EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 import { IconButton, Menu, MenuHandler, MenuList, MenuItem } from "@material-tailwind/react";
@@ -16,6 +15,8 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getCurriculum } from "@/api/getDataAPI";
 import { Dialog, DialogBody, DialogFooter, Button, Input } from "@material-tailwind/react"; 
+import { debounce } from "lodash";
+import { searchcurrAPI } from "@/api/searchDataAPI";
 
 
 export function Curriculums() {
@@ -44,6 +45,15 @@ export function Curriculums() {
   }
     , []);
 
+
+  const handleSearch = async (e) => {
+    const param =  {
+      search_text : e.target.value
+    }
+
+    const filter = await searchcurrAPI(param);
+    setDataCurriculum(filter);
+  }
 
 
   return (
@@ -121,6 +131,7 @@ export function Curriculums() {
                                 <td className={className}>
                                   <Link 
                                     to={"/dashboard" + PATH_EDIT_CURRICULUM + "/" + id_curriculum}
+                                    state={"clone"}
                                     className="text-xs font-semibold text-blue-gray-600 bg-green-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
                                   >
                                     Chọn
@@ -153,21 +164,22 @@ export function Curriculums() {
         </CardHeader>
         <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
             <div className="mx-4 mb-5">
-                <div className="flex items-center gap-4">
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-semibold"
-                  >
-                    Tìm kiếm chương trình
-                  </Typography>
-                </div>
-                <Input
-                  type="text"
-                  outline={true}
-                  placeholder="Tìm kiếm"
-                />
+              <div className="flex items-center gap-4">
+                <Typography
+                  variant="small"
+                  color="blue-gray"
+                  className="font-semibold"
+                >
+                  Tìm kiếm chương trình
+                </Typography>
               </div>
+              <Input
+                type="text"
+                onChange={debounce(handleSearch, 500)}
+                outline={true}
+                placeholder="Tìm kiếm"
+              />
+            </div>
           <table className="w-full min-w-[640px] table-auto">
             <thead>
               <tr>
@@ -187,7 +199,7 @@ export function Curriculums() {
               </tr>
             </thead>
             <tbody>
-              {dataCurriculum.slice(0, 5).map(
+              {dataCurriculum.map(
                 ({ name, id_curriculum, grade, status, year }, key) => {
                   const className = `py-3 px-5 ${key === dataCurriculum.length - 1
                     ? ""
