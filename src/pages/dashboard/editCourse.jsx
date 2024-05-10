@@ -91,6 +91,11 @@ export function CoursesEdit() {
   const [subject_similar, setSubject_similar] = useState([]);
   const [subject_pre, setSubject_pre] = useState([]);
 
+  const handleEditSubject = (e) => {
+    console.log(e);
+  }
+
+  // console.log(subject_pre);
 
   // 6
   const rowCLOs1 = [
@@ -346,6 +351,8 @@ export function CoursesEdit() {
 
 
 
+  console.log(subject_similar)
+
   const handleSave = async () => {
     console.log(state, "state")
     const param = {
@@ -356,13 +363,13 @@ export function CoursesEdit() {
       document: des,
       target: infoDes1,
       description: infoDes2,
-      subject_similar: subject_similar.map(e => { return { id: e, name: e } }),
-      subject_pre: subject_pre.map(e => { return { id: e, name: e } }),
-      CLOs1: tableRowCLOs1.map(e => { return { ...e.value, order  : e.id + 1, id: e.id }}),
-      CLOs2: tableRowCLOs2.map(e => { return { ...e.value, order  : e.id + 1, id: e.id } }),
-      CLOs3: tableRowCLOs3.map(e => { return { ...e.value, id: e.id} }),
-      CLOs4: tableRowCLOs4.map(e => { return { ...e.value, order  : e.id + 1, id: e.id } }),
-      content: tableRowContent.map(e => { return { ...e.value, id: e.id} }),
+      subject_similar: subject_similar.map(e => { return { id_subjectsimilar: e.id, name: e.name } }),
+      subject_pre: subject_pre.map(e => { return { id_subjectpre : e.id, name: e.name } }),
+      CLOs1: tableRowCLOs1.map(e => { return { ...e.value, order  : e.id + 1, id_clos1: e.id }}),
+      CLOs2: tableRowCLOs2.map(e => { return { ...e.value, order  : e.id + 1, id_clos2: e.id } }),
+      CLOs3: tableRowCLOs3.map(e => { return { ...e.value, order  : e.id + 1, id_clos3: e.id } }),
+      CLOs4: tableRowCLOs4.map(e => { return { ...e.value, order  : e.id + 1, id_clos4: e.id } }),
+      content: tableRowContent.map(e => { return { ...e.value, id_content: e.id} }),
       time_update: timeUpdate,
       primary_teacher_ids: primaryTeacher,
       head_department_ids: headDepartment,
@@ -372,7 +379,7 @@ export function CoursesEdit() {
     if (state){
       await CreateCourse(param);
     }else {
-      await putCourse(param);
+      await putCourse(idCourse, param);
     }
 
   }
@@ -393,8 +400,8 @@ export function CoursesEdit() {
       setDes(initialCourse.document);
       setInfoDes1(initialCourse.target);
       setInfoDes2(initialCourse.description);
-      setSubject_similar(initialCourse.subject_similar?.map(e => e.name));
-      setSubject_pre(initialCourse.subject_pre?.map(e => e.name));
+      setSubject_similar(initialCourse.subject_similar?.map(e => { return {id: e.id, name: e.name}}));
+      setSubject_pre(initialCourse.subject_pre?.map(e => { return {id: e.id, name: e.name}}));
       setTableRowCLOs1(initialCourse.CLOs1?.map((e, i) => {
         return {
           className: '',
@@ -607,21 +614,21 @@ export function CoursesEdit() {
         <p className="my-2">Chọn môn tiên quyết</p>
         <Select
           mode="multiple"
-          value={subject_pre}
+          value={subject_pre?.map(e => e.name)}
           style={{ width: '100%' }}
-          onChange={setSubject_pre}
+          onChange={handleEditSubject}
           placeholder="Chọn môn học trước"
-          options={dataCourse.map(e => ({ label: e.title?.split("<p>")[1]?.split("</p>")[0] || e.name , value: e.id_course_main }))}
+          options={dataCourse.map(e => ({ label: e.title?.split("<p>")[1]?.split("</p>")[0] || e?.name , value: {id : e?.id_course_main, name :  e?.name} }))}
         />
 
         <p className="my-2">Chọn môn song hành</p>
         <Select
           mode="multiple"
-          value={subject_similar}
+          value={subject_similar?.map(e => e.name)}
           style={{ width: '100%' }}
           onChange={setSubject_similar}
           placeholder="Chọn môn học trước"
-          options={dataCourse.map(e => ({ label: e.title?.split("<p>")[1]?.split("</p>")[0] || e.name , value: e.id_course_main }))}
+          options={dataCourse.map(e => ({ label: e.title?.split("<p>")[1]?.split("</p>")[0] || e?.name , value: {id : e?.id_course_main, name :  e?.name} }))}
         />
       </div>
 
