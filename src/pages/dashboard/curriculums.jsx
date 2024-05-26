@@ -17,6 +17,7 @@ import { getCurriculum } from "@/api/getDataAPI";
 import { Dialog, DialogBody, DialogFooter, Button, Input } from "@material-tailwind/react"; 
 import { debounce } from "lodash";
 import { searchcurrAPI } from "@/api/searchDataAPI";
+import { DeleteCourse, DeleteCurriculum } from "@/api/deleteAPI";
 
 
 export function Curriculums() {
@@ -45,6 +46,11 @@ export function Curriculums() {
   }
     , []);
 
+
+  const handleDeleteCurriculum = async (id) => {
+    // console.log(id);
+    const res = await DeleteCurriculum(id);
+  }
 
   const handleSearch = async (e) => {
     const param =  {
@@ -279,6 +285,7 @@ export function Curriculums() {
                             </MenuItem>
                             <MenuItem>
                               <Link
+                                onClick={() => handleDeleteCurriculum(id_curriculum)}
                                 to={'#'}
                                 className="text-xs font-semibold text-blue-gray-600 bg-red-500 px-2 py-1 rounded-md text-white flex items-center justify-center"
                               >

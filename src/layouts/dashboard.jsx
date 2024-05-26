@@ -9,6 +9,8 @@ import {
 } from "@/widgets/layout";
 import routes from "@/routes";
 import { useMaterialTailwindController, setOpenConfigurator } from "@/context";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 export function Dashboard() {
   const [controller, dispatch] = useMaterialTailwindController();
@@ -34,6 +36,7 @@ export function Dashboard() {
           )}
         </Routes>
       </div>
+      <ToastContainer />
     </div>
   );
 }

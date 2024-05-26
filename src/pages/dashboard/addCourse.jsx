@@ -24,6 +24,7 @@ import { CreateCourse } from "@/api/postDataAPI";
 import { Select } from 'antd';
 import { getCourse, getUser } from "@/api/getDataAPI";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 
 export function CoursesAdd() {
@@ -331,7 +332,7 @@ export function CoursesAdd() {
   // console.log(subject_similar);
 
 
-  const handleSave = () => {
+  const handleSave = async() => {
 
     const param = {
       id_course_main: idCourse.replace(/\s/g, ''),
@@ -354,11 +355,15 @@ export function CoursesAdd() {
       teachers_ids: teacher
     }
 
-    const data = CreateCourse(param);
-
-    // navigate(PATH_HOME);
+    const data = await CreateCourse(param);
+    if (data) {
+      toast.success("Tạo môn học thành công");
+    } else {
+      toast.error("Tạo môn học thất bại");
+    }
 
   }
+
 
 
 

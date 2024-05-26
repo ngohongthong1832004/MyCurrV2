@@ -21,7 +21,7 @@ import 'react-quill/dist/quill.snow.css'
 import { getCourse, getCurriculum, getUser } from "@/api/getDataAPI";
 import { Select } from "antd";
 import { CreateCurriculum, CreateCurriculumCourse } from "@/api/postDataAPI";
-import { number } from "prop-types";
+import { toast } from "react-toastify";
 
 
 export function CurriculumsAdd() {
@@ -154,6 +154,14 @@ export function CurriculumsAdd() {
     }
 
     const data = await CreateCurriculum(dataCurriculum);
+    
+    if (data.status === 201) {
+      toast.success("Tạo chương trình thành công");
+    } else {
+      toast.error("Tạo chương trình thất bại");
+    }
+
+
   }
 
 

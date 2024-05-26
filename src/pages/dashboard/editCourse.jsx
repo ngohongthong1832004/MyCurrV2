@@ -363,8 +363,20 @@ export function CoursesEdit() {
       document: des,
       target: infoDes1,
       description: infoDes2,
-      subject_similar: subject_similar.map(e => { return { id_subjectsimilar: e.id, name: e.name } }),
-      subject_pre: subject_pre.map(e => { return { id_subjectpre : e.id, name: e.name } }),
+      subject_similar: subject_similar.map(e => {
+         if(state){
+          return e.name
+        }else {
+          return { id_subjectsimilar: e.id, name: e.name } 
+        }
+      }),
+      subject_pre: subject_pre.map(e => { 
+        if(state){
+          return e.name
+        }else {
+          return { id_subjectpre: e.id, name: e.name }
+        }
+       }),
       CLOs1: tableRowCLOs1.map(e => { return { ...e.value, order  : e.id + 1, id_clos1: e.id }}),
       CLOs2: tableRowCLOs2.map(e => { return { ...e.value, order  : e.id + 1, id_clos2: e.id } }),
       CLOs3: tableRowCLOs3.map(e => { return { ...e.value, order  : e.id + 1, id_clos3: e.id } }),
@@ -707,7 +719,7 @@ export function CoursesEdit() {
                 </td>
 
                 <td className="w-10 pl-4">
-                  {item.id === 0 ? (
+                  {i === 0 ? (
                     <button
                       className="w-6 h-6 text-center text-green-600 border border-green-600 rounded-lg "
                       onClick={
@@ -817,7 +829,7 @@ export function CoursesEdit() {
                     <input type="text" className="w-full border-b-2 focus:outline-none" value={item.value.g}  onChange={(e) => handleTableRowsCLOs2(i, 'g', e.target.value)} />
                   </td>
                   <td className="w-10 pl-4">
-                    {item.id === 0 ? (
+                    {i === 0 ? (
                       <button
                         className="w-6 h-6 text-center text-green-600 border border-green-600 rounded-lg "
                         onClick={
@@ -979,7 +991,7 @@ export function CoursesEdit() {
                     />
                   </td>
                   <td className="w-10 pl-4">
-                    {item.id === 0 ? (
+                    {i === 0 ? (
                       <button
                         className="w-6 h-6 text-center text-green-600 border border-green-600 rounded-lg "
                         onClick={
@@ -1207,7 +1219,7 @@ export function CoursesEdit() {
                     scope="row"
                     className="p-2 font-medium border border-gray-400 w-82"
                   >
-                    <textarea
+                    <ReactQuill
                       type="text"
                       className="w-full"
                       defaultValue={item.value.method}
@@ -1219,7 +1231,7 @@ export function CoursesEdit() {
                             .value
                         )
                       }
-                    ></textarea>
+                    ></ReactQuill>
                   </th>
                   <td className="relative break-all border border-gray-400 w-[510px] p-2">
                     <ReactQuill
@@ -1254,7 +1266,7 @@ export function CoursesEdit() {
                   </td>
 
                   <td className="w-10 pl-4">
-                    {item.id === 0 ? (
+                    {i === 0 ? (
                       <button
                         className="w-6 h-6 text-center text-green-600 border border-green-600 rounded-lg "
                         onClick={

@@ -377,7 +377,7 @@ export function CurriculumsEdit() {
                     }
                   </td>
                   <td className="w-10 pl-4">
-                    {item.id === 0 ? (
+                    {index === 0 ? (
                       <button
                         className="w-6 h-6 text-center text-green-600 border border-green-600 rounded-lg "
                         onClick={
